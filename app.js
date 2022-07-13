@@ -3,12 +3,12 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+const dotenv = require('dotenv');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
+dotenv.config();
 var app = express();
-
+PORT=process.env.PORT;
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -37,7 +37,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-PORT=3003;
+
 app.listen(PORT,()=>{
   console.log(`connect at ${PORT}`);
 })

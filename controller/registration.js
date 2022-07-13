@@ -1,6 +1,6 @@
 const Models = require('./../models');
 const bcrypt = require("bcrypt");
-const {encrypt,decrypt}=require('../services/encryptDecrypt');
+const {custodialEncryption,custodialDecryption}=require('../services/encryptDecrypt');
 const createAccount=require('../services/accountGenerate');
 const User = Models.CustodialWallet;
 
@@ -13,9 +13,10 @@ const register= async(req, res, next)=>{
       email : req.body.email,
       password : await bcrypt.hash(req.body.password, salt),
       publicKey: newAccount.address,
-      privateKey:  encrypt(newAccount.privateKey),
+      privateKey:  custodialEncryption(newAccount.privateKey),
   
     };
+
     created_user = await User.create(usr);
     res.status(201).json(created_user);
   };
