@@ -11,6 +11,7 @@ const login = async (req, res, next) => {
         if (password_valid) {
             token = jwt.sign({ "id": user.id, "email": user.email, "Name": user.Name }, process.env.JWTSECRET);
             console.log("valid user Token =",token)
+            user.token = token;// token save at login
             res.status(200).json({ token: token });
         } else {
             res.status(400).json({ error: "Password Incorrect" });
@@ -21,4 +22,7 @@ const login = async (req, res, next) => {
     }
 
 };
+
+
+
 module.exports=login;

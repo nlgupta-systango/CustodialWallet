@@ -6,6 +6,7 @@ var logger = require('morgan');
 const dotenv = require('dotenv');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const auth = require('./services/auth');
 dotenv.config();
 var app = express();
 PORT=process.env.PORT;
@@ -37,6 +38,10 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+app.get('/hello',async(req,res)=>{
+  console.log("hello auth");
+})
 
 app.listen(PORT,()=>{
   console.log(`connect at ${PORT}`);

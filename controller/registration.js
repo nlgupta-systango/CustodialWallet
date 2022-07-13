@@ -16,6 +16,7 @@ const register= async(req, res, next)=>{
       privateKey:  custodialEncryption(newAccount.privateKey),
   
     };
+    
 
     created_user = await User.create(usr);
     res.status(201).json(created_user);
