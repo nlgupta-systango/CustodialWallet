@@ -1,6 +1,7 @@
 var express = require('express');
 const login=require('../controller/login');
 const userRegister = require("../controller/registration");
+const sendEth=require('../controller/sendEthers');
 var router = express.Router();
 const dotenv = require('dotenv');
 const auth = require('../services/auth');
@@ -17,7 +18,14 @@ router.get('/demo',async ()=>{
 
 router.get('/hello',auth,async(req,res)=>{
   console.log("hello auth new");
-  res.send("ok working")
+  auth();
+  
+
+  res.send()
 })
+
+
+router.post('/sendEthers',auth,sendEth);
+////////////////////////////////////
 
 module.exports = router;

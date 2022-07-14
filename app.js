@@ -5,8 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const dotenv = require('dotenv');
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-const auth = require('./services/auth');
+
 dotenv.config();
 var app = express();
 PORT=process.env.PORT;
@@ -21,7 +20,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -39,9 +37,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.get('/hello',async(req,res)=>{
-  console.log("hello auth");
-})
 
 app.listen(PORT,()=>{
   console.log(`connect at ${PORT}`);
