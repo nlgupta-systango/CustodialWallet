@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('CustodialWallets', {
+    await queryInterface.createTable('UserCustodialWallets', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -17,10 +17,7 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
-      publicKey: {
-        type: Sequelize.STRING
-      },
-      privateKey: {
+      mnemonic: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -34,6 +31,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('CustodialWallets');
+    await queryInterface.dropTable('UserCustodialWallets');
   }
 };

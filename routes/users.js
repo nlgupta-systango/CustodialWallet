@@ -2,6 +2,7 @@ var express = require('express');
 const login=require('../controller/login');
 const userRegister = require("../controller/registration");
 const sendEth=require('../controller/sendEthers');
+const userUtility=require('../controller/userUtility');
 var router = express.Router();
 const dotenv = require('dotenv');
 const auth = require('../services/auth');
@@ -27,5 +28,7 @@ router.get('/hello',auth,async(req,res)=>{
 
 router.post('/sendEthers',auth,sendEth);
 ////////////////////////////////////
+router.get('/publickey',auth,userUtility.getPublicKey);
+router.get('/privatekey',auth,userUtility.getPrivateKey);
 
 module.exports = router;

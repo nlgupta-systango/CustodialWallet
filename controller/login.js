@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const Models = require('./../models');
 const dotenv = require('dotenv');
 dotenv.config();
-const User = Models.CustodialWallet;
+const User = Models.UserCustodialWallets;
 const login = async (req, res, next) => {
     const user = await User.findOne({ where: { email: req.body.email } });
     if (user) {
