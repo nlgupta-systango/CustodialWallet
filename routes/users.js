@@ -3,9 +3,11 @@ const login=require('../controller/login');
 const userRegister = require("../controller/registration");
 const sendEth=require('../controller/sendEthers');
 const userUtility=require('../controller/userUtility');
+const contractFunction=require('../controller/contractMethods')
 var router = express.Router();
 const dotenv = require('dotenv');
 const auth = require('../services/auth');
+const adminAuth = require('../services/adminAuth');
 dotenv.config();
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -27,8 +29,12 @@ router.get('/hello',auth,async(req,res)=>{
 
 
 router.post('/sendEthers',auth,sendEth);
+router.post('/balance',auth,contractFunction.balanceOf);
+router.post('/transfer',auth,contractFunction.transfer);
+router.post('/burn',auth,contractFunction.burn);
+router.post('/adminMint',adminAuth,contractFunction.mint);
 ////////////////////////////////////
-router.get('/publickey',auth,userUtility.getPublicKey);
-router.get('/privatekey',auth,userUtility.getPrivateKey);
+router.get('/publickey',auth,userUtility.getPublicKey);// just for testing, will remove
+router.get('/privatekey',auth,userUtility.getPrivateKey);// just for testing, will remove
 
 module.exports = router;

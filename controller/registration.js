@@ -1,7 +1,7 @@
 const Models = require('./../models');
 const bcrypt = require("bcrypt");
 const { custodialEncryption, custodialDecryption } = require('../services/encryptDecrypt');
-// const createAccount=require('../services/accountGenerate');
+
 const HDWallet = require('../services/HDwalletUtility');
 
 const User = Models.UserCustodialWallets;

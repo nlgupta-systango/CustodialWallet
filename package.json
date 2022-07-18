@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@truffle/hdwallet-provider": "^2.0.11",
     "bcrypt": "^5.0.1",
     "bip39": "^3.0.4",
     "blueimp-md5": "^2.19.0",
