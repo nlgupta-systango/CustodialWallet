@@ -1,10 +1,13 @@
 const Web3 = require('web3');
 const Provider = require('@truffle/hdwallet-provider');
 const MyContract = require('../../public/contractABI/MyContract.json');
+const { fromWei, toWei } = require("web3-utils");
 const dotenv=require('dotenv');
 dotenv.config({path: '../../.env'});
 const address = process.env.CONTRACT_ADDRESS;
 const END_POINT=process.env.INFURA_URL;
+const web3 = new Web3(process.env.INFURA_URL);
+
 const contractInteract = async (privateKey) => {
     const provider = new Provider(privateKey,END_POINT); 
     const web3 = new Web3(provider);
@@ -79,6 +82,13 @@ async function mintFunction(fromAddress,toAddress,privateKey,amount){
     return txHash;
 }
 
+async function nativeBalance(userAddress){
+    let balance=await web3.eth.getBalance(userAddress);
+    let ethBalance =fromWei(balance, 'ether');
+    return ethBalance;
+
+
+}
 
 module.exports={
     contractInteract,
@@ -86,7 +96,8 @@ module.exports={
     transferFunction,
     burnFunction,
     balanceOfFunction,
-    totalSupply
+    totalSupply,
+    nativeBalance
 
 
 }

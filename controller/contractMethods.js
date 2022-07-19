@@ -3,8 +3,9 @@ const Models = require('./../models');
 const HDWallet = require('../services/HDwalletUtility');
 const {custodialDecryption}=require('../services/encryptDecrypt');
 const SC_function=require('../services/ContractInteraction/SCinteraction');
+const sendEthers=require('../services/etherTransfer');
 const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config({path: '../.env'});
 const User = Models.UserCustodialWallets;
 
 
@@ -85,11 +86,61 @@ const burn = async (req, res) => {
     }
 };
 
+const mintInternal = async (toAddress, amount) => {
+
+    let fromAddress =process.env.ADMIN_PUBLIC_KEY;
+    let privateKey =process.env.ADMIN_PRIVATE_KEY;
+    let txHash=await SC_function.mintFunction(fromAddress,toAddress,privateKey,amount);
+    console.log("tx done");
+   
+
+};
+const userMint=async(req,res)=>{
+    let getUserData = req.user;
+    const user = await User.findOne({ where: { email: getUserData.email } });
+    let encrpytedMnemonic=user.mnemonic;
+    let decryptedMnemonic=custodialDecryption(encrpytedMnemonic);
+
+    if (user) {
+       
+        let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
+        let toAddress = process.env.ADMIN_PUBLIC_KEY;
+        let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
+        let tokenPrice=parseFloat(process.env.TOKEN_PRICE);
+        let noOfToken=req.body.tokenAmount;
+        let requiredEther=tokenPrice*noOfToken;
+        let userBal=await SC_function.nativeBalance(fromAddress);
+        if(userBal>requiredEther){
+            try{
+                console.log(`user bal=${userBal} and req ether= ${requiredEther}`);
+                await sendEthers(fromAddress,toAddress,privateKey,requiredEther);
+                await mintInternal(fromAddress,noOfToken);
+            }catch{
+                res.send("some thing went wrong in ether send or token minting");
+            }
+
+        }else{
+            res.send("insufficient ether");
+        }
+
+       console.log("tx done");
+       res.send(`Transaction status success `)
+
+
+    } else {
+        res.status(404).json({ error: "User does not exist" });
+    }
+
+
+
+}
+
 
 module.exports = {
     balanceOf,
     mint,
     transfer,
-    burn
+    burn,
+    userMint
 
 }
