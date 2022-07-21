@@ -1,7 +1,7 @@
 var express = require('express');
 const login=require('../controller/login');
 const userRegister = require("../controller/registration");
-const sendEth=require('../controller/sendEthers');
+const {sendEth,checkBalance}=require('../controller/ethersController');
 const userUtility=require('../controller/userUtility');
 const contractFunction=require('../controller/contractMethods')
 var router = express.Router();

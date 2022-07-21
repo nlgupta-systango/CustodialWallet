@@ -14,9 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   UserCustodialWallets.init({
-    Name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING,
+    userAddress: DataTypes.STRING,
     mnemonic: DataTypes.STRING
   }, {
     sequelize,

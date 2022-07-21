@@ -1,5 +1,7 @@
 var express = require('express');
 var usersRouter = require('./users');
+var walletRouter = require('./custodialWallet');
+var ethersRouter = require('./ethers');
 
 var router = express.Router();
 
@@ -9,5 +11,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.use('/users', usersRouter);
+router.use('/custodialwallet', walletRouter);
+router.use('/ethers', ethersRouter);
 
 module.exports = router;

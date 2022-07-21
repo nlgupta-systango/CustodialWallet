@@ -6,17 +6,14 @@ const HDWallet = require('../services/HDwalletUtility');
 
 const User = Models.UserCustodialWallets;
 
-const register = async (req, res, next) => {
+const createAccount = async (req, res, next) => {
 
-  const salt = await bcrypt.genSalt(10);
   let newMnemonic = HDWallet.newMnemonicGenerator();
   let accountFlag = HDWallet.createHDwallet(newMnemonic)
 
   if (accountFlag) {
-    var usr = {
-      Name: req.body.Name,
-      email: req.body.email,
-      password: await bcrypt.hash(req.body.password, salt),
+    let usr = {
+      userAddress:HDWallet.fetchPublicKey(newMnemonic),
       mnemonic: custodialEncryption(newMnemonic),
 
     };
@@ -24,14 +21,19 @@ const register = async (req, res, next) => {
       created_user = await User.create(usr);
       res.status(201).json(created_user);
   
-    }catch{
-      console.log("-------------Invalid entry-----------");
+    }catch(error){
+      res.status(404).json({
+        error
+      });
+      
     }
     
   }else{
-    console.log("account is not created");
+    res.status(500).json({
+     error: "Account not created "
+    });
   }
 
 };
 
-module.exports = register;
+module.exports = createAccount;
