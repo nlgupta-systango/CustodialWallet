@@ -2,8 +2,7 @@
 const Models = require('./../models');
 const HDWallet = require('../services/HDwalletUtility');
 const { custodialDecryption } = require('../services/encryptDecrypt');
-const dotenv = require('dotenv');
-dotenv.config();
+
 const User = Models.UserCustodialWallets;
 
 

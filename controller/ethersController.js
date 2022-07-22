@@ -1,20 +1,18 @@
 
 const Models = require('../models');
-const {sendEthers} = require('../services/etherTransfer');
+const sendEthers= require('../services/etherTransfer');
 const HDWallet = require('../services/HDwalletUtility');
 const { custodialDecryption } = require('../services/encryptDecrypt');
 const {nativeBalance}=require('../services/ContractInteraction/SCinteraction');
-const dotenv = require('dotenv');
-dotenv.config();
+
 const User = Models.UserCustodialWallets;
 const sendEth = async (req, res) => {
-    let userAddress = req.body.fromAddress;
+    let fromAddress = req.body.fromAddress;
     let ethersToTransfer = req.body.ethers;
     let toAddress = req.body.toAddress;
-    console.log(`${userAddress} ${ethersToTransfer} ${toAddress}`);
-    if (userAddress && ethersToTransfer && toAddress) {
+    if (fromAddress && ethersToTransfer && toAddress) {
 
-        const user = await User.findOne({ where: { userAddress: userAddress } });
+        const user = await User.findOne({ where: { userAddress: fromAddress } });
         let encrpytedMnemonic = user.mnemonic;
         let decryptedMnemonic = custodialDecryption(encrpytedMnemonic);
 

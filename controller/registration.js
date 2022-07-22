@@ -1,6 +1,5 @@
 const Models = require('./../models');
-const bcrypt = require("bcrypt");
-const { custodialEncryption, custodialDecryption } = require('../services/encryptDecrypt');
+const { custodialEncryption } = require('../services/encryptDecrypt');
 
 const HDWallet = require('../services/HDwalletUtility');
 

@@ -1,9 +1,7 @@
 const express = require('express');
 const {sendEth,checkBalance} = require("../controller/ethersController");
-const contractFunction = require('../controller/contractMethods')
 const router = express.Router();
-const dotenv = require('dotenv');
-dotenv.config();
+
 /* GET users listing. */
 
 router.get('/', function (req, res,) {

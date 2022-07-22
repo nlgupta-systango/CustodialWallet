@@ -9,9 +9,14 @@ const END_POINT=process.env.INFURA_URL;
 const web3 = new Web3(process.env.INFURA_URL);
 
 const contractInteract = async (privateKey) => {
-    const provider = new Provider(privateKey,END_POINT); 
-    const web3 = new Web3(provider);
-    const networkId = await web3.eth.net.getId();
+    let web3=null;
+    if(privateKey){
+        const provider = new Provider(privateKey,END_POINT); 
+        web3 = new Web3(provider);
+    }else{
+        web3 = new Web3(END_POINT);
+
+    }
     const myContract = new web3.eth.Contract(
       MyContract.abi,
       address
@@ -23,9 +28,10 @@ const contractInteract = async (privateKey) => {
 
 async function transferFunction(fromAddress,toAddress,privateKey,amount){
     let myContract=await contractInteract(privateKey);
-     await myContract.methods.transfer(toAddress,amount).send({
+    let txHash= await myContract.methods.transfer(toAddress,amount).send({
         from:fromAddress
     });
+    return txHash;
 }
 
 async function burnFunction(fromAddress,privateKey,amount){
@@ -49,7 +55,7 @@ async function burnFunction(fromAddress,privateKey,amount){
     return txHash;
 }
 
-async function balanceOfFunction(toAddress,privateKey){
+async function balanceOfFunction(toAddress,privateKey=null){
     let myContract=await contractInteract(privateKey);
     let balance= await myContract.methods.balanceOf(toAddress).call();
     return balance;

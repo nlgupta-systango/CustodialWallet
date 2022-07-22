@@ -39,7 +39,4 @@ const sendEthers = async (fromAddress,toAddress,privateKey,ethers) => {
 
 // deploy();
     
-module.exports ={
-   sendEthers,
-
-} 
+module.exports =sendEthers;
