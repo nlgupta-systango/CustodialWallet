@@ -1,10 +1,10 @@
-var express = require('express');
+const express = require('express');
 const login=require('../controller/login');
 const userRegister = require("../controller/registration");
 const {sendEth,checkBalance}=require('../controller/ethersController');
 const userUtility=require('../controller/userUtility');
 const contractFunction=require('../controller/contractMethods')
-var router = express.Router();
+const router = express.Router();
 const dotenv = require('dotenv');
 const auth = require('../services/auth');
 const adminAuth = require('../services/adminAuth');

@@ -1,10 +1,12 @@
 const CryptoJS = require('crypto-js');
+const Models = require('./../models');
 const dotenv=require('dotenv');
 dotenv.config();
 const AES_KEY=process.env.AES_KEY;
+const User = Models.UserCustodialWallets;
 
 const custodialEncryption=(txt)=>{
-  var encrypted = CryptoJS.AES.encrypt(txt, AES_KEY); 
+  let encrypted = CryptoJS.AES.encrypt(txt, AES_KEY); 
   finalCipher=CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encrypted));
   return finalCipher;
 
@@ -12,12 +14,24 @@ const custodialEncryption=(txt)=>{
 
 const custodialDecryption=(cipher)=>{
   decryptedCipher=CryptoJS.enc.Base64.parse(cipher).toString(CryptoJS.enc.Utf8);
-  var decryptedTxt = CryptoJS.AES.decrypt(decryptedCipher, AES_KEY);
+  let decryptedTxt = CryptoJS.AES.decrypt(decryptedCipher, AES_KEY);
   return decryptedTxt.toString(CryptoJS.enc.Utf8);
 
 }
 
+const getMnemonicFromDB=async(userAddress)=>{
+
+  let fromAddress = userAddress;
+  if (!fromAddress) return res.status(404).json({ error: "fromAddress not found in Body" });
+  const user = await User.findOne({ where: { userAddress: fromAddress } });
+  if (!user) return res.status(404).json({ error: "user not found in Body" });
+  let encrpytedMnemonic = user.mnemonic;
+  let decryptedMnemonic = custodialDecryption(encrpytedMnemonic);
+  return decryptedMnemonic;
+
+}
 module.exports={
     custodialEncryption,
-    custodialDecryption
+    custodialDecryption,
+    getMnemonicFromDB
 }

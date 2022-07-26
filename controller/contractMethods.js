@@ -1,7 +1,7 @@
 
 const Models = require('./../models');
 const HDWallet = require('../services/HDwalletUtility');
-const { custodialDecryption } = require('../services/encryptDecrypt');
+const { custodialDecryption ,getMnemonicFromDB} = require('../services/encryptDecrypt');
 const SC_function = require('../services/ContractInteraction/SCinteraction');
 const sendEthers = require('../services/etherTransfer');
 const dotenv = require('dotenv');
@@ -22,13 +22,10 @@ const tokenBalanceOf = async (req, res) => {
 };
 
 const balanceOf = async (req, res) => {
-    let getUserData = req.user;
-    const user = await User.findOne({ where: { email: getUserData.email } });
-    let encrpytedMnemonic = user.mnemonic;
-    let decryptedMnemonic = custodialDecryption(encrpytedMnemonic);
+    let fromAddress = req.body.fromAddress;
+    let decryptedMnemonic=await getMnemonicFromDB(fromAddress);
 
-
-    if (user) {
+    if (decryptedMnemonic) {
         let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
         let toAddress = req.body.toAddress;
         let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
@@ -57,11 +54,8 @@ const mint = async (req, res) => {
 
 const transfer = async (req, res) => {
     let fromAddress = req.body.fromAddress;
-    if (!fromAddress) return res.status(404).json({ error: "fromAddress not found in Body" });
-    const user = await User.findOne({ where: { userAddress: fromAddress } });
-    let encrpytedMnemonic = user.mnemonic;
-    let decryptedMnemonic = custodialDecryption(encrpytedMnemonic);
-    if (user) {
+    let decryptedMnemonic=await getMnemonicFromDB(fromAddress);
+    if (decryptedMnemonic) {
         let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
         let toAddress = req.body.toAddress;
         let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
@@ -78,11 +72,8 @@ const transfer = async (req, res) => {
 
 const burn = async (req, res) => {
     let fromAddress = req.body.fromAddress;
-    if (!fromAddress) return res.status(404).json({ error: "fromAddress not found in Body" });
-    const user = await User.findOne({ where: { userAddress: fromAddress } });
-    let encrpytedMnemonic = user.mnemonic;
-    let decryptedMnemonic = custodialDecryption(encrpytedMnemonic);
-    if (user) {
+    let decryptedMnemonic=await getMnemonicFromDB(fromAddress);
+    if (decryptedMnemonic) {
         let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
         let toAddress = req.body.toAddress;
         let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
@@ -108,12 +99,8 @@ const mintInternal = async (toAddress, amount) => {
 };
 const userMint = async (req, res) => {
     let fromAddress = req.body.fromAddress;
-    if (!fromAddress) return res.status(404).json({ error: "fromAddress not found in Body" });
-    const user = await User.findOne({ where: { userAddress: fromAddress } });
-    let encrpytedMnemonic = user.mnemonic;
-    let decryptedMnemonic = custodialDecryption(encrpytedMnemonic);
-
-    if (user) {
+    let decryptedMnemonic=await getMnemonicFromDB(fromAddress);
+    if (decryptedMnemonic) {
 
         let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
         let toAddress = process.env.ADMIN_PUBLIC_KEY;

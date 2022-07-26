@@ -27,6 +27,7 @@ function fetchPublicKey(mnemonicPhase) {
     return PUBLIC_KEY;
 }
 
+
 module.exports = {
     newMnemonicGenerator,
     createHDwallet,
