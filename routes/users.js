@@ -1,6 +1,6 @@
 const express = require('express');
 const login=require('../controller/login');
-const userRegister = require("../controller/registration");
+const userRegister = require("../controller/userAccountCreate");
 const {sendEth,checkBalance}=require('../controller/ethersController');
 const userUtility=require('../controller/userUtility');
 const contractFunction=require('../controller/contractMethods')

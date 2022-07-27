@@ -3,6 +3,7 @@ let usersRouter = require('./users');
 let walletRouter = require('./custodialWallet');
 let ethersRouter = require('./ethers');
 let fungibleToken = require('./FungibleToken');
+let client=require('./Client');
 
 let router = express.Router();
 
@@ -15,5 +16,6 @@ router.use('/users', usersRouter);
 router.use('/custodialwallet', walletRouter);
 router.use('/ethers', ethersRouter);
 router.use('/fungibletoken', fungibleToken);
+router.use('/client',client);
 
 module.exports = router;

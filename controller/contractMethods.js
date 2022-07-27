@@ -116,6 +116,7 @@ const userMint = async (req, res) => {
                 console.log(`user bal=${userBal} and req ether= ${requiredEther}`);
                 sentTx = await sendEthers(fromAddress, toAddress, privateKey, requiredEther);
                 mintTx = await mintInternal(fromAddress, noOfToken);
+                res.status(201).json({ message: `Transaction success , send Tx=${sentTx} amd mint token Tx=${mintTx}` });
             } catch {
                 res.status(404).json({ error: "some thing went wrong in ether send or token minting" });
             }
@@ -123,7 +124,7 @@ const userMint = async (req, res) => {
         } else {
             res.status(404).json({ error: "insufficient ether" });
         }
-        res.status(201).json({ message: `Transaction success , send Tx=${sentTx} amd mint token Tx=${mintTx}` });
+       
 
 
     } else {

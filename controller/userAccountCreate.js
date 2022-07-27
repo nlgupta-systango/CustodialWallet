@@ -1,4 +1,4 @@
-const Models = require('./../models');
+const Models = require('../models');
 const { custodialEncryption } = require('../services/encryptDecrypt');
 
 const HDWallet = require('../services/HDwalletUtility');
@@ -14,6 +14,7 @@ const createAccount = async (req, res, next) => {
     let usr = {
       userAddress:HDWallet.fetchPublicKey(newMnemonic),
       mnemonic: custodialEncryption(newMnemonic),
+      email:req.body.email
 
     };
     try{

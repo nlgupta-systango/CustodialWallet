@@ -1,21 +1,21 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('UserCustodialWallets', {
+    await queryInterface.createTable('ClientTables', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      userAddress: {
-        type: Sequelize.STRING,
-        unique:true,
-        allowNull:false
+      name: {
+        type: Sequelize.STRING
       },
-      mnemonic: {
-        type: Sequelize.STRING,
-        allowNull: false
+      email: {
+        type: Sequelize.STRING
+      },
+      key: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -28,6 +28,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('UserCustodialWallets');
+    await queryInterface.dropTable('ClientTables');
   }
 };
