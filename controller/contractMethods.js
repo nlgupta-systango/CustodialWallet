@@ -25,6 +25,44 @@ const tokenBalanceOf = async (req, res) => {
     }
 };
 
+const tokenName = async (req, res) => {
+        try {
+            let name = await SC_function.getTokenName();
+            res.status(201).json(`token name is ${name}`);
+            
+        } catch (error) {
+            res.status(404).json({ error: `something went wrong : ${error}` });
+            
+        }
+};
+
+const totalSupply = async (req, res) => {
+    try {
+        let tokenTotal = await SC_function.totalSupply();
+        res.status(201).json(`token totalSupply is ${tokenTotal}`);
+        
+    } catch (error) {
+        res.status(404).json({ error: `something went wrong : ${error}` });
+        
+    }
+};
+
+const tokenSymbol = async (req, res) => {
+    try {
+        let symbol = await SC_function.getSymbol();
+        res.status(201).json(`token symbol is ${symbol}`);
+        
+    } catch (error) {
+        res.status(404).json({ error: `something went wrong : ${error}` });
+        
+    }
+};
+
+const tokenPrice = async (req, res) => {
+        let price = process.env.TOKEN_PRICE;
+        res.status(201).json(` TOKEN PRICE is ${price}`);
+};
+
 
 const mint = async (req, res) => {
 
@@ -158,10 +196,9 @@ const userMint = async (req, res) => {
     } else {
         res.status(404).json({ error: "User does not exist" });
     }
-
-
-
 }
+
+
 
 
 module.exports = {
@@ -169,6 +206,10 @@ module.exports = {
     mint,
     transfer,
     burn,
-    userMint
+    userMint,
+    tokenName,
+    totalSupply,
+    tokenSymbol,
+    tokenPrice
 
 }

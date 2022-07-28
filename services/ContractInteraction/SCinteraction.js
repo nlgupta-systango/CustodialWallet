@@ -96,6 +96,25 @@ async function nativeBalance(userAddress){
 
 }
 
+async function totalSupply(privateKey=null){
+    let myContract=await contractInteract(privateKey);
+    let totalSupply= await myContract.methods.totalSupply().call();
+    return totalSupply;
+}
+async function getTokenName(privateKey=null){
+    let myContract=await contractInteract(privateKey);
+    let name= await myContract.methods.name().call();
+    return name;
+
+}
+
+async function getSymbol(privateKey=null){
+    let myContract=await contractInteract(privateKey);
+    let symbolName= await myContract.methods.symbol().call();
+    return symbolName;
+
+}
+
 module.exports={
     contractInteract,
     mintFunction,
@@ -103,7 +122,9 @@ module.exports={
     burnFunction,
     balanceOfFunction,
     totalSupply,
-    nativeBalance
+    getTokenName,
+    nativeBalance,
+    getSymbol
 
 
 }

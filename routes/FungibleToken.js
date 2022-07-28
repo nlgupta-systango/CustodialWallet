@@ -10,6 +10,10 @@ router.get('/', function (req, res,) {
     res.status(201).json({ message: "Welcome to Fungible Token Service" });
 });
 router.get('/balanceof/:address',contractFunction.tokenBalanceOf);
+router.get('/name',contractFunction.tokenName);
+router.get('/totalSupply',contractFunction.totalSupply);
+router.get('/symbol',contractFunction.tokenSymbol);
+router.get('/price',contractFunction.tokenPrice);
 
 /* POST users listing. */
 router.post('/transfer',auth,userAuth,contractFunction.transfer);
