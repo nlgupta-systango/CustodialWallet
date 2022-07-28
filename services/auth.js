@@ -5,6 +5,8 @@ const Client = Models.ClientTable;
 const verifyToken =async (req, res, next) => {
   const token = req.headers["x-access-token"];
   let clientEmail = req.body.email;
+  if (!clientEmail || !token) return res.status(404).json({ error: "Body or Header is missing" });
+
   let clientData = await Client.findOne({ where: { email: clientEmail } });
   if (!token) {
     return res.status(403).send("A token is required for authentication");

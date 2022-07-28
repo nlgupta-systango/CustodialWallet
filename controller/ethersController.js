@@ -19,15 +19,20 @@ const sendEth = async (req, res) => {
             let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
             let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
             let ethAmount = ethersToTransfer;
-            let txHash = await sendEthers(fromAddress, toAddress, privateKey, ethAmount);
-            console.log("tx done");
-            res.status(201).json({ message: `transaction success with Tx hash ${txHash}` });
+            try {
+                let txHash = await sendEthers(fromAddress, toAddress, privateKey, ethAmount);
+                console.log("tx done");
+                res.status(201).json({ message: `transaction success with Tx hash ${txHash}` });
+                
+            } catch (error) {
+                res.status(404).json({ error: `something went wrong ${error}` });
+            }
 
         } else {
             res.status(404).json({ error: "User does not exist" });
         }
     } else {
-        res.status(404).json({ error: "Body is missing please provide fromAddess,toAddress and ethers" });
+        res.status(404).json({ error: "Body is missing please provide all reuired field fromAddess,toAddress and ethers" });
     }
 
 

@@ -5,9 +5,13 @@ const jwtToken=require('../services/client_Services/keyGenetator');
 const client = Models.ClientTable;
 
 const clientRegister= async(req, res, next)=>{
+    let clientName=req.body.name;
+    let clientEmail= req.body.email;
+    if (!clientName || !clientEmail) return res.status(404).json({ error: "Body is missing" });
+
     var clientUsr = {
-      name : req.body.name,
-      email : req.body.email,
+      name :clientName ,
+      email :clientEmail,
       key:  generateApiKey()
       //custodialEncryption(newAccount.privateKey)
   

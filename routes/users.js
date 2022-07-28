@@ -30,7 +30,7 @@ router.get('/hello',auth,async(req,res)=>{
 
 router.post('/sendEthers',auth,sendEth);
 router.post('/mintMe',auth,contractFunction.userMint);
-router.post('/balance',auth,contractFunction.balanceOf);
+// router.post('/balance',auth,contractFunction.balanceOf);
 router.post('/transfer',auth,contractFunction.transfer);
 router.post('/burn',auth,contractFunction.burn);
 router.post('/adminMint',adminAuth,contractFunction.mint);
