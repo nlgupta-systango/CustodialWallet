@@ -188,7 +188,7 @@ const userMint = async (req, res) => {
             }
 
         } else {
-            res.status(404).json({ error: "insufficient ether" });
+            res.status(404).json({ error: `insufficient ether ,required ether is ${requiredEther} and ${fromAddress} has only ${userBal}` });
         }
 
 

@@ -17,8 +17,8 @@ router.get('/price',contractFunction.tokenPrice);
 
 /* POST users listing. */
 router.post('/transfer',auth,userAuth,contractFunction.transfer);
-router.post('/minttoken',auth,userAuth,contractFunction.userMint);
-router.post('/burntoken',auth,userAuth,contractFunction.burn);
+router.post('/mint',auth,userAuth,contractFunction.userMint);
+router.post('/burn',auth,userAuth,contractFunction.burn);
 
 
 module.exports = router;

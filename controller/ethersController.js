@@ -35,7 +35,6 @@ const sendEth = async (req, res) => {
         res.status(404).json({ error: "Body is missing please provide all reuired field fromAddess,toAddress and ethers" });
     }
 
-
 };
 
 const checkBalance = async (req, res) => {
