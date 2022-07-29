@@ -34,6 +34,22 @@ async function transferFunction(fromAddress,toAddress,privateKey,amount){
     return txHash;
 }
 
+async function approveFunction(fromAddress,toAddress,privateKey,amount){
+    let myContract=await contractInteract(privateKey);
+    let txHash= await myContract.methods.approve(toAddress,amount).send({
+        from:fromAddress
+    });
+    return txHash;
+}
+
+// async function transferFromFunction(approvedAddress,fromAddress,toAddress,privateKey,amount){
+//     let myContract=await contractInteract(privateKey);
+//     let txHash= await myContract.methods.transferFrom(fromAddress,toAddress,amount).send({
+//         from:approvedAddress
+//     });
+//     return txHash;
+// }
+
 async function burnFunction(fromAddress,privateKey,amount){
     let txHash=null;
     let myContract=await contractInteract(privateKey);
@@ -118,7 +134,9 @@ async function getSymbol(privateKey=null){
 module.exports={
     contractInteract,
     mintFunction,
+    approveFunction,
     transferFunction,
+    // transferFromFunction,
     burnFunction,
     balanceOfFunction,
     totalSupply,

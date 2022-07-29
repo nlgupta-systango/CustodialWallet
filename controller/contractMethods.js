@@ -110,6 +110,58 @@ const transfer = async (req, res) => {
 };
 
 
+// const transferFrom = async (req, res) => {
+//     let fromAddress = req.body.fromAddress;
+//     let approvedAddress=req.body.approvedAddress;
+//     let amount = req.body.amount;
+//     if (!fromAddress || !amount || !approvedAddress) return res.status(404).json({ error: "fromAddress,approvedAddress or amount is missing" });
+
+//     let decryptedMnemonic = await getMnemonicFromDB(approvedAddress);
+//     if (decryptedMnemonic) {
+//         try {
+//         let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
+//         let toAddress = req.body.toAddress;
+//         let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
+            
+//             let txHash = await SC_function.transferFromFunction(approvedAddress,fromAddress, toAddress, privateKey, amount);
+    
+//             res.status(201).json({ message: `${amount} token transfered to ${toAddress} and transaction hash is ${txHash.transactionHash}` });
+//         } catch (error) {
+//             res.status(404).json({ error: `something went wrong : ${error}`});
+
+//         }
+
+//     } else {
+//         res.status(404).json({ error: "User does not exist" });
+//     }
+// };
+
+
+const approve = async (req, res) => {
+    let fromAddress = req.body.fromAddress;
+    let spenderAddress=req.body.spenderAddress;
+    let amount = req.body.amount;
+    if (!fromAddress || !amount || !spenderAddress) return res.status(404).json({ error: "fromAddress,spenderAddress or amount is missing" });
+
+    let decryptedMnemonic = await getMnemonicFromDB(fromAddress);
+    if (decryptedMnemonic) {
+        try {
+        let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
+        let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
+            
+            let txHash = await SC_function.approveFunction(fromAddress,spenderAddress, privateKey, amount);
+    
+            res.status(201).json({ message: `${amount} token is approved to ${spenderAddress} and transaction hash is ${txHash.transactionHash}` });
+        } catch (error) {
+            res.status(404).json({ error: `something went wrong : ${error}`});
+
+        }
+
+    } else {
+        res.status(404).json({ error: "User does not exist" });
+    }
+};
+
 const burn = async (req, res) => {
     let fromAddress = req.body.fromAddress;
     let amount = req.body.amount;
@@ -204,7 +256,9 @@ const userMint = async (req, res) => {
 module.exports = {
     tokenBalanceOf,
     mint,
+    approve,
     transfer,
+    // transferFrom,
     burn,
     userMint,
     tokenName,
