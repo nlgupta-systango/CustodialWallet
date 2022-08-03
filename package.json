@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "nodemon app.js"
   },
   "dependencies": {
     "@truffle/hdwallet-provider": "^2.0.11",
@@ -26,5 +26,8 @@
     "sequelize": "^6.21.3",
     "sequelize-cli": "^6.4.1",
     "web3": "^1.7.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
   }
 }
