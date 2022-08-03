@@ -1,21 +1,21 @@
 let express = require('express');
-let usersRouter = require('./users');
+
 let walletRouter = require('./custodialWallet');
 let ethersRouter = require('./ethers');
-let fungibleToken = require('./FungibleToken');
-let client=require('./Client');
+let fungibleTokenRouter = require('./fungibleToken');
+let clientRouter = require('./client');
 
 let router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/', function (req, res, next) {
+  res.status(201).json({message:"Welcome to Custodial Wallet application"});
 });
 
-router.use('/users', usersRouter);
+
 router.use('/custodialwallet', walletRouter);
 router.use('/ethers', ethersRouter);
-router.use('/fungibletoken', fungibleToken);
-router.use('/client',client);
+router.use('/fungibletoken', fungibleTokenRouter);
+router.use('/client', clientRouter);
 
 module.exports = router;

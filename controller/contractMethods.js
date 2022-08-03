@@ -1,8 +1,8 @@
 
 const Models = require('./../models');
-const HDWallet = require('../services/HDwalletUtility');
+const HDWallet = require('../services/hdWallet');
 const { custodialDecryption, getMnemonicFromDB } = require('../services/encryptDecrypt');
-const SC_function = require('../services/ContractInteraction/SCinteraction');
+const SC_function = require('../services/ContractInteraction/fungibleTokenInteraction');
 const sendEthers = require('../services/etherTransfer');
 const dotenv = require('dotenv');
 dotenv.config({ path: '../.env' });

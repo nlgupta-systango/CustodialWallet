@@ -1,9 +1,9 @@
 
 const Models = require('../models');
 const sendEthers= require('../services/etherTransfer');
-const HDWallet = require('../services/HDwalletUtility');
+const HDWallet = require('../services/hdWallet');
 const { custodialDecryption ,getMnemonicFromDB } = require('../services/encryptDecrypt');
-const {nativeBalance}=require('../services/ContractInteraction/SCinteraction');
+const {nativeBalance}=require('../services/ContractInteraction/fungibleTokenInteraction');
 
 const User = Models.UserCustodialWallets;
 const sendEth = async (req, res) => {

@@ -4,7 +4,7 @@ const auth=require('../services/auth');
 const userAuth=require('../services/transactionAuth');
 const router = express.Router();
 
-/* GET users listing. */
+/* GET listing. */
 
 router.get('/', function (req, res,) {
     res.status(201).json({ message: "Welcome to Fungible Token Service" });
@@ -15,7 +15,7 @@ router.get('/totalSupply',contractFunction.totalSupply);
 router.get('/symbol',contractFunction.tokenSymbol);
 router.get('/price',contractFunction.tokenPrice);
 
-/* POST users listing. */
+/* POST  listing. */
 router.post('/transfer',auth,userAuth,contractFunction.transfer);
 router.post('/mint',auth,userAuth,contractFunction.userMint);
 router.post('/burn',auth,userAuth,contractFunction.burn);

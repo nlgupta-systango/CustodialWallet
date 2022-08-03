@@ -11,7 +11,7 @@ router.get('/', function (req, res,) {
 
 /* POST users listing. */
 
-router.post('/createwallet',auth,walletCreate);
+router.post('/create',auth,walletCreate);
 
 
 module.exports = router;

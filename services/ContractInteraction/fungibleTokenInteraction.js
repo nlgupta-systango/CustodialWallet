@@ -1,6 +1,6 @@
 const Web3 = require('web3');
 const Provider = require('@truffle/hdwallet-provider');
-const MyContract = require('../../public/contractABI/MyContract.json');
+const MyContract = require('../../public/contractABI/erc20Contract.json');
 const { fromWei, toWei } = require("web3-utils");
 const dotenv=require('dotenv');
 dotenv.config({path: '../../.env'});
@@ -51,24 +51,12 @@ async function approveFunction(fromAddress,toAddress,privateKey,amount){
 // }
 
 async function burnFunction(fromAddress,privateKey,amount){
-    let txHash=null;
+    let receipt=null;
     let myContract=await contractInteract(privateKey);
-     await myContract.methods.burn(amount).send({
+    receipt=await myContract.methods.burn(amount).send({
         from:fromAddress
-    }).on('transactionHash', function(hash){
-        txHash= hash;
-    })
-    .on('receipt', function(receipt){
-       // console.log(receipt);
-    })
-    .on('confirmation', function(confirmationNumber, receipt){
-       //console.log(confirmationNumber,receipt);
-    })
-    .on('error', function(error, receipt) {
-       // console.log(error,receipt);
-      
     });
-    return txHash;
+    return receipt.transactionHash;
 }
 
 async function balanceOfFunction(toAddress,privateKey=null){
@@ -84,24 +72,12 @@ async function totalSupply(privateKey){
 }
 
 async function mintFunction(fromAddress,toAddress,privateKey,amount){
-    let txHash=null;
+    let receipt=null;
     let myContract=await contractInteract(privateKey);
-     await myContract.methods.mint(toAddress,amount).send({
+    receipt=await myContract.methods.mint(toAddress,amount).send({
         from:fromAddress
-    }).on('transactionHash', function(hash){
-        txHash= hash;
     })
-    .on('receipt', function(receipt){
-       // console.log(receipt);
-    })
-    .on('confirmation', function(confirmationNumber, receipt){
-       //console.log(confirmationNumber,receipt);
-    })
-    .on('error', function(error, receipt) {
-       // console.log(error,receipt);
-      
-    });
-    return txHash;
+    return receipt.transactionHash;
 }
 
 async function nativeBalance(userAddress){

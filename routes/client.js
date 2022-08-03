@@ -10,7 +10,7 @@ router.get('/', function (req, res,) {
 
 /* POST users listing. */
 
-router.post('/registration',client);
+router.post('/register',client);
 
 
 module.exports = router;
