@@ -13,9 +13,9 @@ router.get('/', function (req, res, next) {
 });
 
 
-router.use('/custodialwallet', walletRouter);
+router.use('/custodialWallet', walletRouter);
 router.use('/ethers', ethersRouter);
-router.use('/fungibletoken', fungibleTokenRouter);
+router.use('/fungibleToken', fungibleTokenRouter);
 router.use('/client', clientRouter);
 
 module.exports = router;

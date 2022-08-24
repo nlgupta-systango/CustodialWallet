@@ -1,4 +1,4 @@
-const Models = require('./../models');
+const Models = require('../models');
 const { generateApiKey } = require('generate-api-key');
 const jwtToken=require('../services/client_Services/keyGenetator');
 const client = Models.ClientTable;

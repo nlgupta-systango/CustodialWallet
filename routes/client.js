@@ -1,5 +1,5 @@
 const express = require('express');
-const client = require("../controller/clientContoller");
+const client = require("../controller/client");
 const router = express.Router();
 
 /* GET users listing. */

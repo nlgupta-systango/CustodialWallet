@@ -1,5 +1,5 @@
 const express = require('express');
-const {sendEth,checkBalance} = require("../controller/ethersController");
+const {sendEth,checkBalance} = require("../controller/ethers");
 const auth=require('../services/auth');
 const userAuth=require('../services/transactionAuth');
 const router = express.Router();
