@@ -1,12 +1,14 @@
 const express = require('express');
 const walletCreate = require("../controller/userAccountCreate");
 const auth=require('../services/auth');
+let {sendResponse} = require('../services/commonResponse');
+
 const router = express.Router();
 
 /* GET users listing. */
 
 router.get('/', function (req, res,) {
-    res.status(201).json({ message: "Welcome to Custodial Wallet Service" });
+    sendResponse(res, 200, null, "Welcome to Custodial Wallet Service" );
 });
 
 /* POST users listing. */

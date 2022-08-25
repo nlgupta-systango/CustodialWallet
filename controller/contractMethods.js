@@ -4,103 +4,101 @@ const HDWallet = require('../services/hdWallet');
 const { custodialDecryption, getMnemonicFromDB } = require('../services/encryptDecrypt');
 const SC_function = require('../services/ContractInteraction/fungibleTokenInteraction');
 const sendEthers = require('../services/etherTransfer');
+let { sendResponse } = require('../services/commonResponse');
+
 const dotenv = require('dotenv');
 dotenv.config({ path: '../.env' });
 const User = Models.UserCustodialWallets;
 
 const tokenBalanceOf = async (req, res) => {
-    let toAddress = req.params.address;
-    if (toAddress) {
-        try {
-            let balance = await SC_function.balanceOfFunction(toAddress);
-            res.status(201).json(`balance of ${toAddress} is ${balance}`);
-            
-        } catch (error) {
-            res.status(404).json({ error: `something went wrong : ${error}` });
-            
-        }
+    if (!req.params || !req.params.address)
+        return sendResponse(res, 400, null, "Wallet address missing from request params");
 
-    } else {
-        res.status(404).json({ error: "please provide address" });
+    let walletAddress = req.params.address;
+    try {
+        let balance = await SC_function.balanceOfFunction(walletAddress);
+        return sendResponse(res, 200, { walletAddress, balance }, "Successfully fetched balance for wallet address");
+
+    } catch (error) {
+        return sendResponse(res, 500, null, "Something went wrong");
+
     }
 };
 
 const tokenName = async (req, res) => {
-        try {
-            let name = await SC_function.getTokenName();
-            res.status(201).json(`token name is ${name}`);
-            
-        } catch (error) {
-            res.status(404).json({ error: `something went wrong : ${error}` });
-            
-        }
+    try {
+        let fungibleTokenName = await SC_function.getTokenName();
+        return sendResponse(res, 200, { fungibleTokenName }, "Successfully fetched name of fungible token");
+
+    } catch (error) {
+        return sendResponse(res, 500, null, "Something went wrong");
+
+    }
 };
 
 const totalSupply = async (req, res) => {
     try {
-        let tokenTotal = await SC_function.totalSupply();
-        res.status(201).json(`token totalSupply is ${tokenTotal}`);
-        
+        let fumgibleTokenTotalSupply = await SC_function.totalSupply();
+        return sendResponse(res, 200, { fumgibleTokenTotalSupply }, "Successfully fetched total supply of fungible token");
+
     } catch (error) {
-        res.status(404).json({ error: `something went wrong : ${error}` });
-        
+        return sendResponse(res, 500, null, "Something went wrong");
+
     }
 };
 
 const tokenSymbol = async (req, res) => {
     try {
-        let symbol = await SC_function.getSymbol();
-        res.status(201).json(`token symbol is ${symbol}`);
-        
+        let fungibleTokenSymbol = await SC_function.getSymbol();
+        return sendResponse(res, 200, { fungibleTokenSymbol }, "Successfully fetched symbol of fungible token");
+
     } catch (error) {
-        res.status(404).json({ error: `something went wrong : ${error}` });
-        
+        return sendResponse(res, 500, null, "Something went wrong");
+
     }
 };
 
 const tokenPrice = async (req, res) => {
-        let price = process.env.TOKEN_PRICE;
-        res.status(201).json(` TOKEN PRICE is ${price}`);
+    let fungibleTokenPrice = process.env.TOKEN_PRICE;
+    return sendResponse(res, 200, { fungibleTokenPrice }, "Successfully fetched price of fungible token");
 };
 
-
 const mint = async (req, res) => {
-
     let fromAddress = process.env.ADMIN_PUBLIC_KEY;
-    let toAddress = req.body.toAddress;
     let privateKey = process.env.ADMIN_PRIVATE_KEY;
+    let toAddress = req.body.toAddress;
     let amount = req.body.amount;
-    if (!toAddress || !amount) return res.status(404).json({ error: "toAddress or amount is missing" });
+    if (!(req.body) || !(req.body.toAddress) || !(req.body.amount))
+        return sendResponse(res, 400, null, "Wallet address or amount missing from request boody");
     try {
-        let txHash = await SC_function.mintFunction(fromAddress, toAddress, privateKey, amount);
+        let mintTransactionHash = await SC_function.mintFunction(fromAddress, toAddress, privateKey, amount);
         console.log("tx done");
-        res.status(201).json({ message: `Transaction status success ${txHash}` });
-        
+        return sendResponse(res, 200, { fromAddress, toAddress, amount, mintTransactionHash }, "Successfully minted fungible token");
+
     } catch (error) {
-        res.status(404).json({ error: `something went wrong : ${error}`});
+        return sendResponse(res, 500, null, "Something went wrong");
 
-        
     }
-
 };
 
 const transfer = async (req, res) => {
+
+    if (!(req.body) || !(req.body.fromAddress) || !(req.body.toAddress) || !(req.body.amount))
+        return sendResponse(res, 400, null, "fromAddress, toAddress or amount is missing from request body");
     let fromAddress = req.body.fromAddress;
     let amount = req.body.amount;
-    if (!fromAddress || !amount) return res.status(404).json({ error: "fromAddress or amount is missing" });
-
+    let toAddress = req.body.toAddress;
     let decryptedMnemonic = await getMnemonicFromDB(fromAddress);
     if (decryptedMnemonic) {
         try {
-        let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
-        let toAddress = req.body.toAddress;
-        let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
-            
-            let txHash = await SC_function.transferFunction(fromAddress, toAddress, privateKey, amount);
-    
-            res.status(201).json({ message: `${amount} token transfered to ${toAddress} and transaction hash is ${txHash.transactionHash}` });
+            let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
+            let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
+            let transferTransactionHash = await SC_function.transferFunction(fromAddress, toAddress, privateKey, amount);
+            return sendResponse(res, 200, { fromAddress, toAddress, amount, transferTransactionHash }, "Successfully transferred fungible token");
+
         } catch (error) {
-            res.status(404).json({ error: `something went wrong : ${error}`});
+            console.log(error);
+            return sendResponse(res, 500, null, "Something went wrong");
 
         }
 
@@ -122,9 +120,9 @@ const transfer = async (req, res) => {
 //         let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
 //         let toAddress = req.body.toAddress;
 //         let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
-            
+
 //             let txHash = await SC_function.transferFromFunction(approvedAddress,fromAddress, toAddress, privateKey, amount);
-    
+
 //             res.status(201).json({ message: `${amount} token transfered to ${toAddress} and transaction hash is ${txHash.transactionHash}` });
 //         } catch (error) {
 //             res.status(404).json({ error: `something went wrong : ${error}`});
@@ -138,22 +136,22 @@ const transfer = async (req, res) => {
 
 
 const approve = async (req, res) => {
-    let fromAddress = req.body.fromAddress;
-    let spenderAddress=req.body.spenderAddress;
-    let amount = req.body.amount;
-    if (!fromAddress || !amount || !spenderAddress) return res.status(404).json({ error: "fromAddress,spenderAddress or amount is missing" });
 
+    if (!(req.body) || !(req.body.fromAddress) || !(req.body.spenderAddress) || !(req.body.amount))
+        return sendResponse(res, 400, null, "fromAddress, spenderAddress or amount is missing from request body");
+    let fromAddress = req.body.fromAddress;
+    let spenderAddress = req.body.spenderAddress;
+    let amount = req.body.amount;
     let decryptedMnemonic = await getMnemonicFromDB(fromAddress);
     if (decryptedMnemonic) {
         try {
-        let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
-        let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
-            
-            let txHash = await SC_function.approveFunction(fromAddress,spenderAddress, privateKey, amount);
-    
-            res.status(201).json({ message: `${amount} token is approved to ${spenderAddress} and transaction hash is ${txHash.transactionHash}` });
+            let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
+            let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
+            let approveTransactionHash = await SC_function.approveFunction(fromAddress, spenderAddress, privateKey, amount);
+            return sendResponse(res, 200, { fromAddress, spenderAddress, amount, approveTransactionHash }, "Successfully approved fungible token");
+
         } catch (error) {
-            res.status(404).json({ error: `something went wrong : ${error}`});
+            return sendResponse(res, 500, null, "Something went wrong");
 
         }
 
@@ -163,26 +161,28 @@ const approve = async (req, res) => {
 };
 
 const burn = async (req, res) => {
+
+    if (!(req.body) || !(req.body.fromAddress) || !(req.body.amount))
+        return sendResponse(res, 400, null, "fromAddress or amount is missing from request body");
     let fromAddress = req.body.fromAddress;
     let amount = req.body.amount;
-    if (!fromAddress || !amount) return res.status(404).json({ error: "fromAddress or amount is missing" });
-  
     let decryptedMnemonic = await getMnemonicFromDB(fromAddress);
     if (decryptedMnemonic) {
         try {
             let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
-        let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
-        let receipt = await SC_function.burnFunction(fromAddress, privateKey, amount);
-        console.log(receipt);
-        console.log("tx done");
-        res.status(404).json({ message: `${amount} tokens burned from ${fromAddress} and Tx=${receipt}` });     
+            let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
+            let burnTransactionHash = await SC_function.burnFunction(fromAddress, privateKey, amount);
+            console.log(receipt);
+            console.log("tx done");
+            return sendResponse(res, 200, { fromAddress, amount, burnTransactionHash }, "Successfully burned fungible token");
+
         } catch (error) {
-            res.status(404).json({ error: `something went wrong : ${error}`});
-    
+            return sendResponse(res, 500, null, "Something went wrong");
+
         }
-        
+
     } else {
-        res.status(404).json({ error: "User does not exist" });
+        return sendResponse(res, 404, null, "User not found");
     }
 };
 
@@ -193,64 +193,65 @@ const mintInternal = async (toAddress, amount) => {
     try {
         let txHash = await SC_function.mintFunction(fromAddress, toAddress, privateKey, amount);
         return txHash;
-        
+
     } catch (error) {
-        res.status(404).json({ error: `something went wrong : ${error}`});
-        
+        console.log(error);
+        return sendResponse(res, 500, null, "Something went wrong");
+
     }
 
-
 };
+
 const userMint = async (req, res) => {
     let fromAddress = req.body.fromAddress;
-    let noOfToken = req.body.tokenAmount;
-    if (!fromAddress || !noOfToken) return res.status(404).json({ error: "fromAddress or tokenAmount is missing" });
-    let decryptedMnemonic=null;
+    let tokenAmount = req.body.tokenAmount;
+    if (!(req.body) || !(req.body.fromAddress) || !(req.body.tokenAmount))
+        return sendResponse(res, 400, null, "fromAddress or tokenAmount is missing from request body");
+    let decryptedMnemonic = null;
     try {
-         decryptedMnemonic = await getMnemonicFromDB(fromAddress);
-        
+        decryptedMnemonic = await getMnemonicFromDB(fromAddress);
+
     } catch (error) {
-        res.status(404).json({ error: `something went wrong : ${error}`});
-        
+        return sendResponse(res, 500, null, "Something went wrong while decrypting mnemonic");
+
     }
     if (decryptedMnemonic) {
 
         let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
-        let toAddress = process.env.ADMIN_PUBLIC_KEY;
         let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
+        let toAddress = process.env.ADMIN_PUBLIC_KEY;
         let tokenPrice = parseFloat(process.env.TOKEN_PRICE);
-        let requiredEther = tokenPrice * noOfToken;
-        let userBal =null;
+        let requiredEther = tokenPrice * tokenAmount;
+        let userBal = null;
         try {
-             userBal = await SC_function.nativeBalance(fromAddress);
+            userBal = await SC_function.nativeBalance(fromAddress);
         } catch (error) {
-            res.status(404).json({ error: `something went wrong : ${error}`});
+            return sendResponse(res, 500, null, "Something went wrong while fetching ether balance");
 
         }
-        let sentTx = null;
-        let mintTx = null;
+        let etherTransferTransactionHash = null;
+        let fungibleTokenMintTransactionHash = null;
         if (userBal > requiredEther) {
             try {
                 console.log(`user bal=${userBal} and req ether= ${requiredEther}`);
-                sentTx = await sendEthers(fromAddress, toAddress, privateKey, requiredEther);
-                mintTx = await mintInternal(fromAddress, noOfToken);
-                res.status(201).json({ message: `Transaction success , send Tx=${sentTx} amd mint token Tx=${mintTx}` });
-            } catch(error) {
-                res.status(404).json({ error: `something went wrong : ${error}` });
+                etherTransferTransactionHash = await sendEthers(fromAddress, toAddress, privateKey, requiredEther);
+                fungibleTokenMintTransactionHash = await mintInternal(fromAddress, tokenAmount);
+                return sendResponse(res, 200, { fromAddress, tokenAmount, etherTransferTransactionHash, fungibleTokenMintTransactionHash }, "Successfully minted fungible token");
+
+            } catch (error) {
+                console.log(error);
+
+                return sendResponse(res, 500, null, "Something went wrong during transactions");
             }
 
         } else {
-            res.status(404).json({ error: `insufficient ether ,required ether is ${requiredEther} and ${fromAddress} has only ${userBal}` });
+            return sendResponse(res, 500, null, "Insufficient ether balance");
         }
 
-
-
     } else {
-        res.status(404).json({ error: "User does not exist" });
+        return sendResponse(res, 404, null, "User not found");
     }
 }
-
-
 
 
 module.exports = {

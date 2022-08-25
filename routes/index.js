@@ -4,14 +4,14 @@ let walletRouter = require('./custodialWallet');
 let ethersRouter = require('./ethers');
 let fungibleTokenRouter = require('./fungibleToken');
 let clientRouter = require('./client');
+let { sendResponse } = require('../services/commonResponse');
 
 let router = express.Router();
 
-/* GET home page. */
+/* GET Application  */
 router.get('/', function (req, res, next) {
-  res.status(201).json({message:"Welcome to Custodial Wallet application"});
+	sendResponse(res, 200, null, "Welcome to Custodial Wallet application");
 });
-
 
 router.use('/custodialWallet', walletRouter);
 router.use('/ethers', ethersRouter);

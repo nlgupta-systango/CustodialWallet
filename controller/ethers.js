@@ -1,54 +1,52 @@
 
 const Models = require('../models');
-const sendEthers= require('../services/etherTransfer');
+const sendEthers = require('../services/etherTransfer');
 const HDWallet = require('../services/hdWallet');
-const { custodialDecryption ,getMnemonicFromDB } = require('../services/encryptDecrypt');
-const {nativeBalance}=require('../services/ContractInteraction/fungibleTokenInteraction');
+const { custodialDecryption, getMnemonicFromDB } = require('../services/encryptDecrypt');
+const { nativeBalance } = require('../services/ContractInteraction/fungibleTokenInteraction');
+let { sendResponse } = require('../services/commonResponse');
 
 const User = Models.UserCustodialWallets;
 const sendEth = async (req, res) => {
-    let clientEmail=req.body.email;
-    let data=req.user;
-    if (clientEmail!=data.email) return res.status(404).json({ error: "wrong client request for user" });
+    if (!(req.body) || !(req.body.email) || !(req.body.fromAddress) || !(req.body.ethersToTransfer) || !(req.body.toAddress))
+        return sendResponse(res, 400, null, "Client email, fromAddress, toAddress or amount of ethers missing from request body");
+    let clientEmail = req.body.email;
+    let data = req.user;
+    if (clientEmail != data.email)
+        return sendResponse(res, 400, null, "Wrong client request for user");
     let fromAddress = req.body.fromAddress;
-    let ethersToTransfer = req.body.ethers;
+    let ethersToTransfer = req.body.ethersToTransfer;
     let toAddress = req.body.toAddress;
-    if (fromAddress && ethersToTransfer && toAddress) {
-        let decryptedMnemonic=await getMnemonicFromDB(fromAddress);
-        if (decryptedMnemonic) {
-            let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
-            let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
-            let ethAmount = ethersToTransfer;
-            try {
-                let txHash = await sendEthers(fromAddress, toAddress, privateKey, ethAmount);
-                console.log("tx done");
-                res.status(201).json({ message: `transaction success with Tx hash ${txHash}` });
-                
-            } catch (error) {
-                res.status(404).json({ error: `something went wrong ${error}` });
-            }
+    let decryptedMnemonic = await getMnemonicFromDB(fromAddress);
+    if (decryptedMnemonic) {
+        let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
+        let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
+        try {
+            let etherTransferTransactionHash = await sendEthers(fromAddress, toAddress, privateKey, ethersToTransfer);
+            console.log("tx done");
+            return sendResponse(res, 200, { fromAddress, toAddress, privateKey, ethersToTransfer, etherTransferTransactionHash }, "Successfully fetched balance for wallet address");
 
-        } else {
-            res.status(404).json({ error: "User does not exist" });
+        } catch (error) {
+            return sendResponse(res, 500, null, "Something went wrong");
         }
+
     } else {
-        res.status(404).json({ error: "Body is missing please provide all reuired field fromAddess,toAddress and ethers" });
+        return sendResponse(res, 404, null, "User not found");
     }
 
 };
 
 const checkBalance = async (req, res) => {
-    let publickey=req.params.address;
-    let ethBalance=await nativeBalance(publickey);
-    res.status(201).json({
-        message:`balance of ${publickey} is ${ethBalance}`
-    });
-    
+    if (!(req.params) || !(req.params.address))
+        return sendResponse(res, 400, null, "Address missing from request params");
+    let address = req.params.address;
+    let etherBalance = await nativeBalance(address);
+    return sendResponse(res, 200, { address, etherBalance }, "Successfully fetched balance for wallet address");
 
 }
 
 
-module.exports ={ 
+module.exports = {
     sendEth,
     checkBalance
 

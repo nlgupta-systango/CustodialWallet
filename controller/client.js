@@ -1,25 +1,33 @@
 const Models = require('../models');
 const { generateApiKey } = require('generate-api-key');
-const jwtToken=require('../services/client_Services/keyGenetator');
+const jwtToken = require('../services/client_Services/keyGenetator');
+let { sendResponse } = require('../services/commonResponse');
+
 const client = Models.ClientTable;
 
-const clientRegister= async(req, res, next)=>{
-    let clientName=req.body.name;
-    let clientEmail= req.body.email;
-    if (!clientName || !clientEmail) return res.status(404).json({ error: "Body is missing" });
+const clientRegister = async (req, res, next) => {
+	if (!(req.body) || !(req.body.name) || !(req.body.email))
+		return sendResponse(res, 400, null, "Name or email missing from request body");
 
-    let clientUsr = {
-      name :clientName ,
-      email :clientEmail,
-      key:  generateApiKey()
-    
-  
-    };
-    
-    console.log(clientUsr);
-    created_user = await client.create(clientUsr);
-    clientToken=await jwtToken(req.body.email);
-    res.status(201).json(`${created_user}  and client Token is ${clientToken}`);
-  };
+	let clientName = req.body.name;
+	let clientEmail = req.body.email;
+	try {
+		let clientUsr = {
+			name: clientName,
+			email: clientEmail,
+			key: generateApiKey()
+		};
+	
+		createdClient = await client.create(clientUsr);
+		console.log(createdClient);
+		clientToken = await jwtToken(clientEmail);
+		return sendResponse(res, 200, { createdClient, clientToken }, `Successfully created client!`);
+		
+	} catch (error) {
+		return sendResponse(res, 500, null, "Something went wrong");
+
+	}
+
+};
 
 module.exports = clientRegister;

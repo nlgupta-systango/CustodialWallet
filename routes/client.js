@@ -1,14 +1,17 @@
 const express = require('express');
+
 const client = require("../controller/client");
+let {sendResponse} = require('../services/commonResponse');
+
 const router = express.Router();
 
-/* GET users listing. */
+/* GET listing. */
 
 router.get('/', function (req, res,) {
-    res.status(201).json({ message: "Welcome to Client Service" });
+    sendResponse(res, 200, null, "Welcome to Client Service" );
 });
 
-/* POST users listing. */
+/* POST listing. */
 
 router.post('/register',client);
 

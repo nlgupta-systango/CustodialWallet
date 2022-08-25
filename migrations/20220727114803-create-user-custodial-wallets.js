@@ -9,13 +9,13 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       userAddress: {
+        unique:true,
         type: Sequelize.STRING
       },
       mnemonic: {
         type: Sequelize.STRING
       },
       email: {
-        unique:true,
         type: Sequelize.STRING
       },
       createdAt: {

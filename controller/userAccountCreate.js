@@ -1,6 +1,6 @@
 const Models = require('../models');
 const { custodialEncryption } = require('../services/encryptDecrypt');
-
+let { sendResponse } = require('../services/commonResponse');
 const HDWallet = require('../services/hdWallet');
 
 const User = Models.UserCustodialWallets;
@@ -9,31 +9,25 @@ const createAccount = async (req, res, next) => {
 
   let newMnemonic = HDWallet.newMnemonicGenerator();
   let accountFlag = HDWallet.createHDwallet(newMnemonic)
-
+  if(!(req.body) || !(req.body.email))
+  return sendResponse(res, 400, null, "Email missing from request body");
   if (accountFlag) {
     let usr = {
-      userAddress:HDWallet.fetchPublicKey(newMnemonic),
+      userAddress: HDWallet.fetchPublicKey(newMnemonic),
       mnemonic: custodialEncryption(newMnemonic),
-      email:req.body.email
-
+      email: req.body.email
     };
-    try{
-      created_user = await User.create(usr);
-      res.status(201).json(created_user);
-  
-    }catch(error){
-      res.status(404).json({
-        error
-      });
-      
-    }
-    
-  }else{
-    res.status(500).json({
-     error: "Account not created "
-    });
-  }
+    try {
+      let createdUser = await User.create(usr);
+      return sendResponse(res, 200, { createdUser }, `Successfully created User!`);
 
+    } catch (error) {
+      return sendResponse(res, 500, null, "Something went wrong while creating user");
+
+    }
+  } else {
+    return sendResponse(res, 500, null, "Something went wrong while creating account");
+  }
 };
 
 module.exports = createAccount;
