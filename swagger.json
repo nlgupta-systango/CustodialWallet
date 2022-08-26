@@ -1,0 +1,616 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Custodial Wallet API Documentation",
+    "description": "Custodial Wallet API Documentation"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000/",
+      "description": "Local Dev"
+    },
+    {
+      "url": "/api/",
+      "description": "With docker-compose and nginx proxy"
+    }
+  ],
+  "tags": [
+    {
+      "name": "StatusCheck",
+      "description": "API for checking status of different services and custodial wallet application"
+    },
+    {
+      "name": "Register",
+      "description": "API for Registering new client"
+    },
+    {
+      "name": "CustodialWallet",
+      "description": "APIs for creating new custodial wallet"
+    },
+    {
+      "name": "Ether",
+      "description": "APIs for Ether related functionalities"
+    },
+    {
+      "name": "FungibleToken",
+      "description": "APIs for FungibleToken related functionalities"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "components": {
+    "securitySchemes": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "in": "header",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "jwt": []
+    }
+  ],
+  "paths": {
+    "/v1/client/register": {
+      "post": {
+        "tags": [
+          "Register"
+        ],
+        "summary": "Register as New Client",
+        "requestBody": {
+          "description": "This API is to be used to Register as New Client in Custodial wallet service",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/registerClientRequest"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/accountResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          },
+          "500": {
+            "description": "Failed. Something went wrong."
+          },
+          "404": {
+            "description": "Something went wrong, might be invalid route"
+          }
+        }
+      }
+    },
+    "/v1/custodialWallet/create": {
+      "post": {
+        "tags": [
+          "CustodialWallet"
+        ],
+        "summary": "Create a New wallet on the Blockchain using Custodial wallet service",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "requestBody": {
+          "description": "This API is to be used to Create a New wallet on the Blockchain using Custodial wallet service",
+          "required": true,
+          "x-access-token": "string",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/custodialWalletCreationRequest"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/custodialWalletCreationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          },
+          "404": {
+            "description": "Something went wrong, might be invalid route"
+          },
+          "500": {
+            "description": "Failed. Something went wrong."
+          }
+        }
+      }
+    },
+    "/v1/": {
+      "get": {
+        "tags": [
+          "StatusCheck"
+        ],
+        "summary": "Get status of custodial wallet services application",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "status": "integer",
+                "data": {
+                  "type": "object"
+                },
+                "message": "string"
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong, might be invalid route"
+          },
+          "500": {
+            "description": "Something went wrong, might be invalid route"
+          }
+        }
+      }
+    },
+    "/v1/ethers": {
+      "get": {
+        "tags": [
+          "StatusCheck"
+        ],
+        "summary": "Get status of custodial wallet ethers related service",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "status": "integer",
+                "data": {
+                  "type": "object"
+                },
+                "message": "string"
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong, might be invalid route"
+          },
+          "500": {
+            "description": "Something went wrong, might be invalid route"
+          }
+        }
+      }
+    },
+    "/v1/custodialWallet": {
+      "get": {
+        "tags": [
+          "StatusCheck"
+        ],
+        "summary": "Get status of custodial wallet create new wallet service",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "status": "integer",
+                "data": {
+                  "type": "object"
+                },
+                "message": "string"
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong, might be invalid route"
+          },
+          "500": {
+            "description": "Something went wrong, might be invalid route"
+          }
+        }
+      }
+    },
+    "/v1/fungibleToken": {
+      "get": {
+        "tags": [
+          "StatusCheck"
+        ],
+        "summary": "Get status of custodial wallet fungible token service",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "status": "integer",
+                "data": {
+                  "type": "object"
+                },
+                "message": "string"
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong, might be invalid route"
+          },
+          "500": {
+            "description": "Something went wrong, might be invalid route"
+          }
+        }
+      }
+    },
+    "/v1/client": {
+      "get": {
+        "tags": [
+          "StatusCheck"
+        ],
+        "summary": "Get status of custodial wallet fungible token service",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "status": "integer",
+                "data": {
+                  "type": "object"
+                },
+                "message": "string"
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong, might be invalid route"
+          },
+          "500": {
+            "description": "Something went wrong, might be invalid route"
+          }
+        }
+      }
+    },
+    "/v1/ethers/balance/{walletAddress}": {
+      "get": {
+        "tags": [
+          "Ether"
+        ],
+        "summary": "Get ether balance of a wallet address from the Blockchain",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "walletAddress",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Wallet address whose ether balance needs to be fetched from blockchain"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "status": "integer",
+                "data": {
+                  "type": "object",
+                  "schema": {
+                    "$ref": "#/definitions/etherBalanceResponse"
+                  }
+                },
+                "message": "string"
+              }
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/v1/fungibleToken/balanceOf/{walletAddress}": {
+      "get": {
+        "tags": [
+          "FungibleToken"
+        ],
+        "summary": "Get fungible token balance of a wallet address from the Blockchain",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "walletAddress",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Wallet address whose fungible token balance needs to be fetched from blockchain"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "status": "integer",
+                "data": {
+                  "type": "object",
+                  "schema": {
+                    "$ref": "#/definitions/fungibleTokenBalanceResponse"
+                  }
+                },
+                "message": "string"
+              }
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "id": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        }
+      }
+    },
+    "generalResonse": {
+      "status": "integer",
+      "data": "object",
+      "message": "string"
+    },
+    "registerClientRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "accountResponse": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "$ref": "#/definitions/account"
+        }
+      }
+    },
+    "client": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "job": {
+      "type": "object",
+      "properties": {
+        "jobId": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        },
+        "result": {
+          "type": "string"
+        },
+        "transactionId": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      }
+    },
+    "custodialWalletCreationRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "eventMetadata": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "$ref": "#/definitions/typeValue"
+        },
+        "value": {
+          "$ref": "#/definitions/typeValue"
+        }
+      }
+    },
+    "typeValue": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "custodialWalletCreationResponse": {
+      "type": "object",
+      "properties": {
+        "createdClient": {
+          "type": "object",
+          "properties": {
+            "account": {
+              "$ref": "#/definitions/client"
+            }
+          }
+        },
+        "clientToken": {
+          "type": "string"
+        }
+      }
+    },
+    "etherBalanceResponse": {
+      "type": "object",
+      "properties": {
+        "walletAddress": {
+          "type": "string"
+        },
+        "etherBalance": {
+          "type": "string"
+        }
+      }
+    },
+    "fungibleTokenBalanceResponse": {
+      "type": "object",
+      "properties": {
+        "walletAddress": {
+          "type": "string"
+        },
+        "balance": {
+          "type": "string"
+        }
+      }
+    },
+    "veraTicketRequest": {
+      "type": "object",
+      "properties": {
+        "recipient": {
+          "type": "string"
+        },
+        "typeId": {
+          "type": "number"
+        },
+        "image": {
+          "type": "string"
+        },
+        "section": {
+          "type": "number"
+        },
+        "row": {
+          "type": "number"
+        },
+        "seat": {
+          "type": "number"
+        },
+        "ticketprice": {
+          "type": "number"
+        }
+      }
+    },
+    "veraTicketResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "typeId": {
+          "type": "number"
+        },
+        "image": {
+          "type": "string"
+        },
+        "eventId": {
+          "type": "number"
+        },
+        "section": {
+          "type": "number"
+        },
+        "row": {
+          "type": "number"
+        },
+        "seat": {
+          "type": "number"
+        },
+        "ticketOwner": {
+          "type": "string"
+        },
+        "ticketprice": {
+          "type": "number"
+        },
+        "originalTicketOwner": {
+          "type": "string"
+        }
+      }
+    },
+    "getVeraTicketRequest": {
+      "type": "object",
+      "properties": {
+        "externalId": {
+          "type": "string"
+        }
+      }
+    },
+    "transferVeraTicketRequest": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

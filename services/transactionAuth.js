@@ -12,7 +12,6 @@ const verifyClient = async (req, res, next) => {
     return sendResponse(res, 400, null, "fromAddress missing from  Body" );
     try {        
         let userData = await User.findOne({ where: { userAddress: fromAddress } });
-        console.log(userData);
         // let clientData = await Client.findOne({ where: { email: clientEmail } });
         if (clientEmail == userData.email) {
             return next();

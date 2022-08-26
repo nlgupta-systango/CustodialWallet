@@ -1,7 +1,7 @@
 const express = require('express');
 
-const client = require("../controller/client");
-let {sendResponse} = require('../services/commonResponse');
+const client = require("../../controller/client");
+let {sendResponse} = require('../../services/commonResponse');
 
 const router = express.Router();
 

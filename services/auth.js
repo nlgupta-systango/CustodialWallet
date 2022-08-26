@@ -5,11 +5,16 @@ let { sendResponse } = require('../services/commonResponse');
 const Client = Models.ClientTable;
 
 const verifyToken = async (req, res, next) => {
-  console.log(req.body);
-  if (!(req.body) || !(req.body.email) || !(req.headers["x-access-token"]))
+  if (!(req.body) || !(req.body.email) || (!(req.headers["x-access-token"]) && !(req.headers["authorization"])))
     return sendResponse(res, 400, null, "Body or Header is missing");
-
-  const token = req.headers["x-access-token"];
+  let token;
+  if((req.headers["authorization"]) && req.headers["authorization"].split(' ')[0] === 'Bearer'){
+    token = req.headers.authorization.split(' ')[1];
+  }
+  else{
+    token = req.headers["x-access-token"];
+  }
+  // const token = req.headers["x-access-token"];
   let clientEmail = req.body.email;
   let clientData = null;
   try {

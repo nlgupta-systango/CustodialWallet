@@ -37,11 +37,11 @@ const sendEth = async (req, res) => {
 };
 
 const checkBalance = async (req, res) => {
-    if (!(req.params) || !(req.params.address))
+    if (!(req.params) || !(req.params.walletAddress))
         return sendResponse(res, 400, null, "Address missing from request params");
-    let address = req.params.address;
-    let etherBalance = await nativeBalance(address);
-    return sendResponse(res, 200, { address, etherBalance }, "Successfully fetched balance for wallet address");
+    let walletAddress = req.params.walletAddress;
+    let etherBalance = await nativeBalance(walletAddress);
+    return sendResponse(res, 200, { walletAddress, etherBalance }, "Successfully fetched balance for wallet address");
 
 }
 

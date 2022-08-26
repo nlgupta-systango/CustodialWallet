@@ -1,7 +1,7 @@
 const express = require('express');
-const walletCreate = require("../controller/userAccountCreate");
-const auth=require('../services/auth');
-let {sendResponse} = require('../services/commonResponse');
+const walletCreate = require("../../controller/userAccountCreate");
+const auth=require('../../services/auth');
+let {sendResponse} = require('../../services/commonResponse');
 
 const router = express.Router();
 

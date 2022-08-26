@@ -8,7 +8,6 @@ const client = Models.ClientTable;
 const clientRegister = async (req, res, next) => {
 	if (!(req.body) || !(req.body.name) || !(req.body.email))
 		return sendResponse(res, 400, null, "Name or email missing from request body");
-
 	let clientName = req.body.name;
 	let clientEmail = req.body.email;
 	try {
@@ -19,7 +18,7 @@ const clientRegister = async (req, res, next) => {
 		};
 	
 		createdClient = await client.create(clientUsr);
-		console.log(createdClient);
+		createdClient.key = null;
 		clientToken = await jwtToken(clientEmail);
 		return sendResponse(res, 200, { createdClient, clientToken }, `Successfully created client!`);
 		

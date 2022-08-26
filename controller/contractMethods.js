@@ -97,7 +97,6 @@ const transfer = async (req, res) => {
             return sendResponse(res, 200, { fromAddress, toAddress, amount, transferTransactionHash }, "Successfully transferred fungible token");
 
         } catch (error) {
-            console.log(error);
             return sendResponse(res, 500, null, "Something went wrong");
 
         }
@@ -172,7 +171,6 @@ const burn = async (req, res) => {
             let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
             let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
             let burnTransactionHash = await SC_function.burnFunction(fromAddress, privateKey, amount);
-            console.log(receipt);
             console.log("tx done");
             return sendResponse(res, 200, { fromAddress, amount, burnTransactionHash }, "Successfully burned fungible token");
 
@@ -195,7 +193,6 @@ const mintInternal = async (toAddress, amount) => {
         return txHash;
 
     } catch (error) {
-        console.log(error);
         return sendResponse(res, 500, null, "Something went wrong");
 
     }
@@ -239,8 +236,6 @@ const userMint = async (req, res) => {
                 return sendResponse(res, 200, { fromAddress, tokenAmount, etherTransferTransactionHash, fungibleTokenMintTransactionHash }, "Successfully minted fungible token");
 
             } catch (error) {
-                console.log(error);
-
                 return sendResponse(res, 500, null, "Something went wrong during transactions");
             }
 

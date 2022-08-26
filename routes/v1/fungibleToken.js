@@ -1,8 +1,8 @@
 const express = require('express');
-const contractFunction = require('../controller/contractMethods')
-const auth = require('../services/auth');
-const clientUserMatch = require('../services/transactionAuth');
-let { sendResponse } = require('../services/commonResponse');
+const contractFunction = require('../../controller/contractMethods')
+const auth = require('../../services/auth');
+const clientUserMatch = require('../../services/transactionAuth');
+let { sendResponse } = require('../../services/commonResponse');
 
 const router = express.Router();
 

@@ -4,7 +4,7 @@ let walletRouter = require('./custodialWallet');
 let ethersRouter = require('./ethers');
 let fungibleTokenRouter = require('./fungibleToken');
 let clientRouter = require('./client');
-let { sendResponse } = require('../services/commonResponse');
+let { sendResponse } = require('../../services/commonResponse');
 
 let router = express.Router();
 
