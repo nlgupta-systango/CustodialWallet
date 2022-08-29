@@ -24,7 +24,7 @@ const sendEth = async (req, res) => {
         try {
             let etherTransferTransactionHash = await sendEthers(fromAddress, toAddress, privateKey, ethersToTransfer);
             console.log("tx done");
-            return sendResponse(res, 200, { fromAddress, toAddress, privateKey, ethersToTransfer, etherTransferTransactionHash }, "Successfully fetched balance for wallet address");
+            return sendResponse(res, 200, { fromAddress, toAddress, ethersToTransfer, etherTransferTransactionHash }, "Successfully transferred ethers!");
 
         } catch (error) {
             return sendResponse(res, 500, null, "Something went wrong");

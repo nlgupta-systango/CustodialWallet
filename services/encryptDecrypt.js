@@ -31,7 +31,6 @@ const getMnemonicFromDB=async(userAddress)=>{
 
 }
 
-console.log(custodialDecryption("VTJGc2RHVmtYMTh6MExWemN4aWJINzhZeGQ4K013UUZYcDYwdm5pWlF3Q2pSYUJJT0t1SFZ6RnR0QlZZYkRJMUw2YTh4UDNLOXp1Y1BFMFArY1hFZHJkTlZoR3ZtRDl5OUNtcC9yNGY1Q09neWt5b1VvbVhwZE9aUTJnMkc1Uko="));
 module.exports={
     custodialEncryption,
     custodialDecryption,

@@ -16,8 +16,8 @@ const tokenBalanceOf = async (req, res) => {
 
     let walletAddress = req.params.address;
     try {
-        let balance = await SC_function.balanceOfFunction(walletAddress);
-        return sendResponse(res, 200, { walletAddress, balance }, "Successfully fetched balance for wallet address");
+        let fungibleTokenBalance = await SC_function.balanceOfFunction(walletAddress);
+        return sendResponse(res, 200, { walletAddress, fungibleTokenBalance }, "Successfully fetched balance for wallet address");
 
     } catch (error) {
         return sendResponse(res, 500, null, "Something went wrong");

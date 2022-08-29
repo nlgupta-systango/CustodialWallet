@@ -9,10 +9,6 @@
     {
       "url": "http://localhost:8000/",
       "description": "Local Dev"
-    },
-    {
-      "url": "/api/",
-      "description": "With docker-compose and nginx proxy"
     }
   ],
   "tags": [
@@ -116,7 +112,6 @@
         "requestBody": {
           "description": "This API is to be used to Create a New wallet on the Blockchain using Custodial wallet service",
           "required": true,
-          "x-access-token": "string",
           "content": {
             "application/json": {
               "schema": {
@@ -389,18 +384,118 @@
           }
         }
       }
-    }
-  },
-  "definitions": {
-    "id": {
-      "type": "object",
-      "properties": {
-        "uuid": {
-          "type": "string"
-        }
-      }
     },
-    "generalResonse": {
+    "/v1/ethers/transfer": {
+      "post": {
+        "tags": [
+          "Ether"
+        ],
+        "summary": "Transfer ethers from your custodial wallet to another wallet.",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "requestBody": {
+          "description": "This API is to be used to Transfer ethers from your custodial wallet to another wallet using Custodial wallet application",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/etherTransferRequest"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                
+                  "status": "integer",
+                  "data": {
+                    "type": "object",
+                    "schema": {
+                      "$ref": "#/definitions/etherTransferResponse"
+                    }
+                  },
+                  "message": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          },
+          "404": {
+            "description": "Something went wrong, might be invalid route"
+          },
+          "500": {
+            "description": "Failed. Something went wrong."
+          }
+        }
+    },
+    "/v1/fungibleToken/transfer": {
+      "post": {
+        "tags": [
+          "FungibleToken"
+        ],
+        "summary": "Transfer fungible( ERC20 ) tokens from your custodial wallet to another wallet.",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "requestBody": {
+          "description": "This API is to be used to Transfer ethers from your custodial wallet to another wallet using Custodial wallet application",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/etherTransferRequest"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                
+                  "status": "integer",
+                  "data": {
+                    "type": "object",
+                    "schema": {
+                      "$ref": "#/definitions/etherTransferResponse"
+                    }
+                  },
+                  "message": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          },
+          "404": {
+            "description": "Something went wrong, might be invalid route"
+          },
+          "500": {
+            "description": "Failed. Something went wrong."
+          }
+        }
+    }
+    },
+  "definitions": {
+    "generalResponse": {
       "status": "integer",
       "data": "object",
       "message": "string"
@@ -438,48 +533,11 @@
         }
       }
     },
-    "job": {
-      "type": "object",
-      "properties": {
-        "jobId": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        },
-        "error": {
-          "type": "string"
-        },
-        "result": {
-          "type": "string"
-        },
-        "transactionId": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "string"
-        },
-        "updatedAt": {
-          "type": "string"
-        }
-      }
-    },
     "custodialWalletCreationRequest": {
       "type": "object",
       "properties": {
         "email": {
           "type": "string"
-        }
-      }
-    },
-    "eventMetadata": {
-      "type": "object",
-      "properties": {
-        "key": {
-          "$ref": "#/definitions/typeValue"
-        },
-        "value": {
-          "$ref": "#/definitions/typeValue"
         }
       }
     },
@@ -527,87 +585,41 @@
         "walletAddress": {
           "type": "string"
         },
-        "balance": {
+        "fungibleTokenBalance": {
           "type": "string"
         }
       }
     },
-    "veraTicketRequest": {
+    "etherTransferRequest": {
       "type": "object",
       "properties": {
-        "recipient": {
+        "email": {
           "type": "string"
         },
-        "typeId": {
-          "type": "number"
-        },
-        "image": {
+        "fromAddress": {
           "type": "string"
         },
-        "section": {
-          "type": "number"
-        },
-        "row": {
-          "type": "number"
-        },
-        "seat": {
-          "type": "number"
-        },
-        "ticketprice": {
-          "type": "number"
-        }
-      }
-    },
-    "veraTicketResponse": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "number"
-        },
-        "typeId": {
-          "type": "number"
-        },
-        "image": {
+        "ethersToTransfer": {
           "type": "string"
         },
-        "eventId": {
-          "type": "number"
-        },
-        "section": {
-          "type": "number"
-        },
-        "row": {
-          "type": "number"
-        },
-        "seat": {
-          "type": "number"
-        },
-        "ticketOwner": {
-          "type": "string"
-        },
-        "ticketprice": {
-          "type": "number"
-        },
-        "originalTicketOwner": {
+        "toAddress": {
           "type": "string"
         }
       }
     },
-    "getVeraTicketRequest": {
+    "etherTransferResponse": {
       "type": "object",
       "properties": {
-        "externalId": {
-          "type": "string"
-        }
-      }
-    },
-    "transferVeraTicketRequest": {
-      "type": "object",
-      "properties": {
-        "from": {
+        "etherTransferTransactionHash": {
           "type": "string"
         },
-        "to": {
+        "fromAddress": {
+          "type": "string"
+        },
+        "ethersToTransfer": {
+          "type": "string"
+        },
+        "toAddress": {
           "type": "string"
         }
       }
