@@ -3,7 +3,7 @@ const Models = require('./../models');
 const dotenv=require('dotenv');
 dotenv.config();
 const AES_KEY=process.env.AES_KEY;
-const User = Models.UserCustodialWallets;
+const User = Models.UserCustodialWallet;
 
 const custodialEncryption=(txt)=>{
   let encrypted = CryptoJS.AES.encrypt(txt, AES_KEY); 
@@ -19,8 +19,7 @@ const custodialDecryption=(cipher)=>{
 
 }
 
-const getMnemonicFromDB=async(userAddress)=>{
-
+const getMnemonicFromDB=async(userAddress)=>{  
   let fromAddress = userAddress;
   if (!fromAddress) return res.status(404).json({ error: "fromAddress not found in Body" });
   const user = await User.findOne({ where: { userAddress: fromAddress } });

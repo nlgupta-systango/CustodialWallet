@@ -33,12 +33,8 @@
       "description": "APIs for FungibleToken related functionalities"
     }
   ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
   "components": {
     "securitySchemes": {
       "jwt": {
@@ -49,17 +45,10 @@
       }
     }
   },
-  "security": [
-    {
-      "jwt": []
-    }
-  ],
   "paths": {
     "/v1/client/register": {
       "post": {
-        "tags": [
-          "Register"
-        ],
+        "tags": ["Register"],
         "summary": "Register as New Client",
         "requestBody": {
           "description": "This API is to be used to Register as New Client in Custodial wallet service",
@@ -72,17 +61,20 @@
             }
           }
         },
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/definitions/accountResponse"
-                }
+                "status": "integer",
+                "data": {
+                  "type": "object",
+                  "schema": {
+                    "$ref": "#/definitions/registerClientResponse"
+                  }
+                },
+                "message": "string"                
               }
             }
           },
@@ -100,9 +92,7 @@
     },
     "/v1/custodialWallet/create": {
       "post": {
-        "tags": [
-          "CustodialWallet"
-        ],
+        "tags": ["CustodialWallet"],
         "summary": "Create a New wallet on the Blockchain using Custodial wallet service",
         "security": [
           {
@@ -120,9 +110,7 @@
             }
           }
         },
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "OK",
@@ -148,13 +136,9 @@
     },
     "/v1/": {
       "get": {
-        "tags": [
-          "StatusCheck"
-        ],
+        "tags": ["StatusCheck"],
         "summary": "Get status of custodial wallet services application",
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "OK",
@@ -179,13 +163,9 @@
     },
     "/v1/ethers": {
       "get": {
-        "tags": [
-          "StatusCheck"
-        ],
+        "tags": ["StatusCheck"],
         "summary": "Get status of custodial wallet ethers related service",
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "OK",
@@ -210,13 +190,9 @@
     },
     "/v1/custodialWallet": {
       "get": {
-        "tags": [
-          "StatusCheck"
-        ],
+        "tags": ["StatusCheck"],
         "summary": "Get status of custodial wallet create new wallet service",
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "OK",
@@ -241,13 +217,9 @@
     },
     "/v1/fungibleToken": {
       "get": {
-        "tags": [
-          "StatusCheck"
-        ],
+        "tags": ["StatusCheck"],
         "summary": "Get status of custodial wallet fungible token service",
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "OK",
@@ -272,13 +244,9 @@
     },
     "/v1/client": {
       "get": {
-        "tags": [
-          "StatusCheck"
-        ],
+        "tags": ["StatusCheck"],
         "summary": "Get status of custodial wallet fungible token service",
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "OK",
@@ -303,9 +271,7 @@
     },
     "/v1/ethers/balance/{walletAddress}": {
       "get": {
-        "tags": [
-          "Ether"
-        ],
+        "tags": ["Ether"],
         "summary": "Get ether balance of a wallet address from the Blockchain",
         "parameters": [
           {
@@ -318,9 +284,7 @@
             "description": "Wallet address whose ether balance needs to be fetched from blockchain"
           }
         ],
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "OK",
@@ -345,9 +309,7 @@
     },
     "/v1/fungibleToken/balanceOf/{walletAddress}": {
       "get": {
-        "tags": [
-          "FungibleToken"
-        ],
+        "tags": ["FungibleToken"],
         "summary": "Get fungible token balance of a wallet address from the Blockchain",
         "parameters": [
           {
@@ -360,9 +322,7 @@
             "description": "Wallet address whose fungible token balance needs to be fetched from blockchain"
           }
         ],
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "OK",
@@ -387,9 +347,7 @@
     },
     "/v1/ethers/transfer": {
       "post": {
-        "tags": [
-          "Ether"
-        ],
+        "tags": ["Ether"],
         "summary": "Transfer ethers from your custodial wallet to another wallet.",
         "security": [
           {
@@ -407,43 +365,38 @@
             }
           }
         },
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
-                
-                  "status": "integer",
-                  "data": {
-                    "type": "object",
-                    "schema": {
-                      "$ref": "#/definitions/etherTransferResponse"
-                    }
-                  },
-                  "message": "string"
-                }
+                "status": "integer",
+                "data": {
+                  "type": "object",
+                  "schema": {
+                    "$ref": "#/definitions/etherTransferResponse"
+                  }
+                },
+                "message": "string"
               }
             }
-          },
-          "400": {
-            "description": "Failed. Bad post data."
-          },
-          "404": {
-            "description": "Something went wrong, might be invalid route"
-          },
-          "500": {
-            "description": "Failed. Something went wrong."
           }
+        },
+        "400": {
+          "description": "Failed. Bad post data."
+        },
+        "404": {
+          "description": "Something went wrong, might be invalid route"
+        },
+        "500": {
+          "description": "Failed. Something went wrong."
         }
+      }
     },
     "/v1/fungibleToken/transfer": {
       "post": {
-        "tags": [
-          "FungibleToken"
-        ],
+        "tags": ["FungibleToken"],
         "summary": "Transfer fungible( ERC20 ) tokens from your custodial wallet to another wallet.",
         "security": [
           {
@@ -451,49 +404,193 @@
           }
         ],
         "requestBody": {
-          "description": "This API is to be used to Transfer ethers from your custodial wallet to another wallet using Custodial wallet application",
+          "description": "This API is to be used to Transfer fungible( ERC20 ) tokens from your custodial wallet to another wallet using Custodial wallet application",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/definitions/etherTransferRequest"
+                "$ref": "#/definitions/fungibleTokenTransferRequest"
               }
             }
           }
         },
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
-                
-                  "status": "integer",
-                  "data": {
-                    "type": "object",
-                    "schema": {
-                      "$ref": "#/definitions/etherTransferResponse"
-                    }
-                  },
-                  "message": "string"
-                }
+                "status": "integer",
+                "data": {
+                  "type": "object",
+                  "schema": {
+                    "$ref": "#/definitions/fungibleTokenTransferResponse"
+                  }
+                },
+                "message": "string"
               }
             }
-          },
-          "400": {
-            "description": "Failed. Bad post data."
-          },
-          "404": {
-            "description": "Something went wrong, might be invalid route"
-          },
-          "500": {
-            "description": "Failed. Something went wrong."
           }
+        },
+        "400": {
+          "description": "Failed. Bad post data."
+        },
+        "404": {
+          "description": "Something went wrong, might be invalid route"
+        },
+        "500": {
+          "description": "Failed. Something went wrong."
         }
-    }
+      }
     },
+    "/v1/fungibleToken/mint": {
+      "post": {
+        "tags": ["FungibleToken"],
+        "summary": "Mint fungible( ERC20 ) tokens to your custodial wallet by paying price set by Admin",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "requestBody": {
+          "description": "This API is to be used to Mint fungible( ERC20 ) tokens to your custodial wallet",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/fungibleTokenMintRequest"
+              }
+            }
+          }
+        },
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "status": "integer",
+                "data": {
+                  "type": "object",
+                  "schema": {
+                    "$ref": "#/definitions/fungibleTokenMintResponse"
+                  }
+                },
+                "message": "string"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Failed. Bad post data."
+        },
+        "404": {
+          "description": "Something went wrong, might be invalid route"
+        },
+        "500": {
+          "description": "Failed. Something went wrong."
+        }
+      }
+    },
+    "/v1/fungibleToken/burn": {
+      "post": {
+        "tags": ["FungibleToken"],
+        "summary": "Burn fungible( ERC20 ) tokens from your custodial wallet",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "requestBody": {
+          "description": "This API is to be used to Burn fungible( ERC20 ) tokens from your custodial wallet",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/fungibleTokenBurnRequest"
+              }
+            }
+          }
+        },
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "status": "integer",
+                "data": {
+                  "type": "object",
+                  "schema": {
+                    "$ref": "#/definitions/fungibleTokenBurnResponse"
+                  }
+                },
+                "message": "string"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Failed. Bad post data."
+        },
+        "404": {
+          "description": "Something went wrong, might be invalid route"
+        },
+        "500": {
+          "description": "Failed. Something went wrong."
+        }
+      }
+    },
+    "/v1/fungibleToken/approve": {
+      "post": {
+        "tags": ["FungibleToken"],
+        "summary": "Approve fungible( ERC20 ) tokens from your custodial wallet to another wallet",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "requestBody": {
+          "description": "This API is to be used to Approve fungible( ERC20 ) tokens from your custodial wallet to another wallet",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/fungibleTokenApproveRequest"
+              }
+            }
+          }
+        },
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "status": "integer",
+                "data": {
+                  "type": "object",
+                  "schema": {
+                    "$ref": "#/definitions/fungibleTokenApproveResponse"
+                  }
+                },
+                "message": "string"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Failed. Bad post data."
+        },
+        "404": {
+          "description": "Something went wrong, might be invalid route"
+        },
+        "500": {
+          "description": "Failed. Something went wrong."
+        }
+      }
+    }
+  },
   "definitions": {
     "generalResponse": {
       "status": "integer",
@@ -511,11 +608,11 @@
         }
       }
     },
-    "accountResponse": {
+    "registerClientResponse": {
       "type": "object",
       "properties": {
-        "account": {
-          "$ref": "#/definitions/account"
+        "client": {
+          "$ref": "#/definitions/client"
         }
       }
     },
@@ -599,7 +696,7 @@
         "fromAddress": {
           "type": "string"
         },
-        "ethersToTransfer": {
+        "amount": {
           "type": "string"
         },
         "toAddress": {
@@ -616,10 +713,137 @@
         "fromAddress": {
           "type": "string"
         },
-        "ethersToTransfer": {
+        "amount": {
           "type": "string"
         },
         "toAddress": {
+          "type": "string"
+        }
+      }
+    },
+    "fungibleTokenTransferRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "fromAddress": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "toAddress": {
+          "type": "string"
+        }
+      }
+    },
+    "fungibleTokenTransferResponse": {
+      "type": "object",
+      "properties": {
+        "fungibleTokenTransferTransactionHash": {
+          "type": "string"
+        },
+        "fromAddress": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "toAddress": {
+          "type": "string"
+        }
+      }
+    },
+    "fungibleTokenMintRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "fromAddress": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      }
+    },
+    "fungibleTokenMintResponse": {
+      "type": "object",
+      "properties": {
+        "etherTransferTransactionHash": {
+          "type": "string"
+        },
+        "fungibleTokenMintTransactionHash": {
+          "type": "string"
+        },
+        "fromAddress": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      }
+    },
+    "fungibleTokenBurnRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "fromAddress": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      }
+    },
+    "fungibleTokenBurnResponse": {
+      "type": "object",
+      "properties": {
+        "fungibleTokenBurnTransactionHash": {
+          "type": "string"
+        },
+        "fromAddress": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      }
+    },
+    "fungibleTokenApproveRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "fromAddress": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "spenderAddress": {
+          "type": "string"
+        }
+      }
+    },
+    "fungibleTokenApproveResponse": {
+      "type": "object",
+      "properties": {
+        "fungibleTokenApproveTransactionHash": {
+          "type": "string"
+        },
+        "fromAddress": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "spenderAddress": {
           "type": "string"
         }
       }

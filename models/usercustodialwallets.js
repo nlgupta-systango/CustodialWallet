@@ -1,7 +1,6 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Sequelize, DataTypes, Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class UserCustodialWallets extends Model {
     /**
@@ -14,12 +13,33 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   UserCustodialWallets.init({
-    userAddress: DataTypes.STRING,
-    mnemonic: DataTypes.STRING,
-    email: DataTypes.STRING
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
+    userAddress: {
+      unique:true,
+      type: DataTypes.STRING
+    },
+    mnemonic: {
+      type: DataTypes.STRING
+    },
+    email: {
+      type: DataTypes.STRING
+    },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE
+    },
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE
+    }
   }, {
     sequelize,
-    modelName: 'UserCustodialWallets',
+    modelName: 'UserCustodialWallet',
   });
   return UserCustodialWallets;
 };

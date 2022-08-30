@@ -8,7 +8,7 @@ let { sendResponse } = require('../services/commonResponse');
 
 const dotenv = require('dotenv');
 dotenv.config({ path: '../.env' });
-const User = Models.UserCustodialWallets;
+const User = Models.UserCustodialWallet;
 
 const tokenBalanceOf = async (req, res) => {
     if (!req.params || !req.params.address)
@@ -93,8 +93,8 @@ const transfer = async (req, res) => {
         try {
             let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
             let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
-            let transferTransactionHash = await SC_function.transferFunction(fromAddress, toAddress, privateKey, amount);
-            return sendResponse(res, 200, { fromAddress, toAddress, amount, transferTransactionHash }, "Successfully transferred fungible token");
+            let fungibleTokenTransferTransactionHash = await SC_function.transferFunction(fromAddress, toAddress, privateKey, amount);
+            return sendResponse(res, 200, { fromAddress, toAddress, amount, fungibleTokenTransferTransactionHash }, "Successfully transferred fungible token");
 
         } catch (error) {
             return sendResponse(res, 500, null, "Something went wrong");
@@ -146,8 +146,8 @@ const approve = async (req, res) => {
         try {
             let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
             let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
-            let approveTransactionHash = await SC_function.approveFunction(fromAddress, spenderAddress, privateKey, amount);
-            return sendResponse(res, 200, { fromAddress, spenderAddress, amount, approveTransactionHash }, "Successfully approved fungible token");
+            let fungibleTokenApproveTransactionHash = await SC_function.approveFunction(fromAddress, spenderAddress, privateKey, amount);
+            return sendResponse(res, 200, { fromAddress, spenderAddress, amount, fungibleTokenApproveTransactionHash }, "Successfully approved fungible token");
 
         } catch (error) {
             return sendResponse(res, 500, null, "Something went wrong");
@@ -170,9 +170,9 @@ const burn = async (req, res) => {
         try {
             let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
             let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
-            let burnTransactionHash = await SC_function.burnFunction(fromAddress, privateKey, amount);
+            let fungibleTokenBurnTransactionHash = await SC_function.burnFunction(fromAddress, privateKey, amount);
             console.log("tx done");
-            return sendResponse(res, 200, { fromAddress, amount, burnTransactionHash }, "Successfully burned fungible token");
+            return sendResponse(res, 200, { fromAddress, amount, fungibleTokenBurnTransactionHash }, "Successfully burned fungible token");
 
         } catch (error) {
             return sendResponse(res, 500, null, "Something went wrong");
@@ -201,9 +201,9 @@ const mintInternal = async (toAddress, amount) => {
 
 const userMint = async (req, res) => {
     let fromAddress = req.body.fromAddress;
-    let tokenAmount = req.body.tokenAmount;
-    if (!(req.body) || !(req.body.fromAddress) || !(req.body.tokenAmount))
-        return sendResponse(res, 400, null, "fromAddress or tokenAmount is missing from request body");
+    let amount = req.body.amount;
+    if (!(req.body) || !(req.body.fromAddress) || !(req.body.amount))
+        return sendResponse(res, 400, null, "fromAddress or amount is missing from request body");
     let decryptedMnemonic = null;
     try {
         decryptedMnemonic = await getMnemonicFromDB(fromAddress);
@@ -218,7 +218,7 @@ const userMint = async (req, res) => {
         let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
         let toAddress = process.env.ADMIN_PUBLIC_KEY;
         let tokenPrice = parseFloat(process.env.TOKEN_PRICE);
-        let requiredEther = tokenPrice * tokenAmount;
+        let requiredEther = tokenPrice * amount;
         let userBal = null;
         try {
             userBal = await SC_function.nativeBalance(fromAddress);
@@ -232,8 +232,8 @@ const userMint = async (req, res) => {
             try {
                 console.log(`user bal=${userBal} and req ether= ${requiredEther}`);
                 etherTransferTransactionHash = await sendEthers(fromAddress, toAddress, privateKey, requiredEther);
-                fungibleTokenMintTransactionHash = await mintInternal(fromAddress, tokenAmount);
-                return sendResponse(res, 200, { fromAddress, tokenAmount, etherTransferTransactionHash, fungibleTokenMintTransactionHash }, "Successfully minted fungible token");
+                fungibleTokenMintTransactionHash = await mintInternal(fromAddress, amount);
+                return sendResponse(res, 200, { fromAddress, amount, etherTransferTransactionHash, fungibleTokenMintTransactionHash }, "Successfully minted fungible token");
 
             } catch (error) {
                 return sendResponse(res, 500, null, "Something went wrong during transactions");

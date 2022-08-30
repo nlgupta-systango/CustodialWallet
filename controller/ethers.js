@@ -6,25 +6,25 @@ const { custodialDecryption, getMnemonicFromDB } = require('../services/encryptD
 const { nativeBalance } = require('../services/ContractInteraction/fungibleTokenInteraction');
 let { sendResponse } = require('../services/commonResponse');
 
-const User = Models.UserCustodialWallets;
+const User = Models.UserCustodialWallet;
 const sendEth = async (req, res) => {
-    if (!(req.body) || !(req.body.email) || !(req.body.fromAddress) || !(req.body.ethersToTransfer) || !(req.body.toAddress))
+    if (!(req.body) || !(req.body.email) || !(req.body.fromAddress) || !(req.body.amount) || !(req.body.toAddress))
         return sendResponse(res, 400, null, "Client email, fromAddress, toAddress or amount of ethers missing from request body");
     let clientEmail = req.body.email;
     let data = req.user;
     if (clientEmail != data.email)
         return sendResponse(res, 400, null, "Wrong client request for user");
     let fromAddress = req.body.fromAddress;
-    let ethersToTransfer = req.body.ethersToTransfer;
+    let amount = req.body.amount;
     let toAddress = req.body.toAddress;
     let decryptedMnemonic = await getMnemonicFromDB(fromAddress);
     if (decryptedMnemonic) {
         let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
         let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
         try {
-            let etherTransferTransactionHash = await sendEthers(fromAddress, toAddress, privateKey, ethersToTransfer);
+            let etherTransferTransactionHash = await sendEthers(fromAddress, toAddress, privateKey, amount);
             console.log("tx done");
-            return sendResponse(res, 200, { fromAddress, toAddress, ethersToTransfer, etherTransferTransactionHash }, "Successfully transferred ethers!");
+            return sendResponse(res, 200, { fromAddress, toAddress, amount, etherTransferTransactionHash }, "Successfully transferred ethers!");
 
         } catch (error) {
             return sendResponse(res, 500, null, "Something went wrong");

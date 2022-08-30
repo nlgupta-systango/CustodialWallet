@@ -3,7 +3,7 @@ const { custodialEncryption } = require('../services/encryptDecrypt');
 let { sendResponse } = require('../services/commonResponse');
 const HDWallet = require('../services/hdWallet');
 
-const User = Models.UserCustodialWallets;
+const User = Models.UserCustodialWallet;
 
 const createAccount = async (req, res, next) => {
 
@@ -22,10 +22,12 @@ const createAccount = async (req, res, next) => {
       return sendResponse(res, 200, { createdUser }, `Successfully created User!`);
 
     } catch (error) {
+      console.log(error);
       return sendResponse(res, 500, null, "Something went wrong while creating user");
 
     }
   } else {
+    console.log(error);
     return sendResponse(res, 500, null, "Something went wrong while creating account");
   }
 };

@@ -17,12 +17,14 @@ const clientRegister = async (req, res, next) => {
 			key: generateApiKey()
 		};
 	
-		createdClient = await client.create(clientUsr);
-		createdClient.key = null;
-		clientToken = await jwtToken(clientEmail);
-		return sendResponse(res, 200, { createdClient, clientToken }, `Successfully created client!`);
+		let createdClient = await client.create(clientUsr);
+		let newClient =  createdClient.dataValues;
+		delete newClient.key;
+		let clientToken = await jwtToken(clientEmail);
+		return sendResponse(res, 200, { newClient, clientToken }, `Successfully created client!`);
 		
 	} catch (error) {
+		console.log(error);
 		return sendResponse(res, 500, null, "Something went wrong");
 
 	}

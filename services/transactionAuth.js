@@ -1,7 +1,9 @@
 const jwt = require("jsonwebtoken");
 const Models = require('../models');
-const User = Models.UserCustodialWallets;
+const User = Models.UserCustodialWallet;
 const Client = Models.ClientTable;
+let { sendResponse } = require('./commonResponse');
+
 
 
 const verifyClient = async (req, res, next) => {
@@ -20,7 +22,8 @@ const verifyClient = async (req, res, next) => {
         }
 
     } catch (error) {
-        return sendResponse(res, 500, null, "Something went wrong");
+        console.log(error)
+        return sendResponse(res, 403, null, "Unauthorized request, This wallet was not created by provided client");
                 
     }
 
