@@ -5,7 +5,6 @@ const logger = require('morgan');
 const dotenv = require('dotenv');
 const swaggerUiExpress = require('swagger-ui-express');
 const indexRouter = require('./routes/v1/index');
-const db = require('./models');
 let { sendResponse } = require('./services/commonResponse');
 let swaggerDocument = require('./swagger.json');
 

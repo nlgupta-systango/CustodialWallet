@@ -18,6 +18,13 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
+      clientTableId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'ClientTables',
+          key: 'id'
+        },
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
