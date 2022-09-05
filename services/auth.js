@@ -34,6 +34,7 @@ const verifyToken = async (req, res, next) => {
     } else {
       return sendResponse(res, 401, null, "Invalid Token for this client");
     }
+    
   } catch (err) {
     return sendResponse(res, 401, null, "Invalid Token");
 
