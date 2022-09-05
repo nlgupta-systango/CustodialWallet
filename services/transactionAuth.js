@@ -14,8 +14,8 @@ const verifyClient = async (req, res, next) => {
     return sendResponse(res, 400, null, "fromAddress missing from  Body" );
     try {        
         let userData = await User.findOne({ where: { userAddress: fromAddress } });
-        // let clientData = await Client.findOne({ where: { email: clientEmail } });
-        if (clientEmail == userData.email) {
+        let clientData = await Client.findOne({ where: { email: clientEmail } });
+        if (clientData.id == userData.clientId) {
             return next();
         } else {
             return sendResponse(res, 403, null, "This wallet was not created by provided client" );

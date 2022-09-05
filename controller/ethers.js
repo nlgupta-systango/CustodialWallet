@@ -11,7 +11,7 @@ const sendEth = async (req, res) => {
     if (!(req.body) || !(req.body.email) || !(req.body.fromAddress) || !(req.body.amount) || !(req.body.toAddress))
         return sendResponse(res, 400, null, "Client email, fromAddress, toAddress or amount of ethers missing from request body");
     let clientEmail = req.body.email;
-    let data = req.user;
+    let data = req.client;
     if (clientEmail != data.email)
         return sendResponse(res, 400, null, "Wrong client request for user");
     let fromAddress = req.body.fromAddress;

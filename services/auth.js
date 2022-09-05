@@ -19,6 +19,7 @@ const verifyToken = async (req, res, next) => {
   let clientData = null;
   try {
     clientData = await Client.findOne({ where: { email: clientEmail } });
+    console.log(clientData,"!!!!!!!!!!!!!!");
     if (!clientData)
       return sendResponse(res, 404, null, "Client not found");
 
@@ -28,7 +29,9 @@ const verifyToken = async (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, clientData.key);
-    req.user = decoded;
+    console.log(clientData, clientEmail, decoded.email, token, clientData.key);
+
+    req.client = decoded;
     if (clientEmail == decoded.email) {
       return next();
     } else {
