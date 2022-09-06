@@ -19,7 +19,6 @@ const verifyToken = async (req, res, next) => {
   let clientData = null;
   try {
     clientData = await Client.findOne({ where: { email: clientEmail } });
-    console.log(clientData,"!!!!!!!!!!!!!!");
     if (!clientData)
       return sendResponse(res, 404, null, "Client not found");
 
