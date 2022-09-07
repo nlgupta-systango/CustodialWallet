@@ -3,7 +3,7 @@ const Models = require('./../models');
 const dotenv=require('dotenv');
 dotenv.config();
 const AES_KEY=process.env.AES_KEY;
-const User = Models.UserCustodialWallet;
+const User = Models.User_Custodial_Wallet;
 
 const custodialEncryption=(txt)=>{
   let encrypted = CryptoJS.AES.encrypt(txt, AES_KEY); 

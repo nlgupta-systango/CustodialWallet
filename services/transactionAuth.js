@@ -1,13 +1,10 @@
-const jwt = require("jsonwebtoken");
 const Models = require('../models');
-const User = Models.UserCustodialWallet;
-const Client = Models.ClientTable;
+const User = Models.User_Custodial_Wallet;
+const { Client }= Models;
 let { sendResponse } = require('./commonResponse');
 
 
-
 const verifyClient = async (req, res, next) => {
-    const token = req.headers["x-access-token"];
     let clientEmail = req.body.email;
     let fromAddress = req.body.fromAddress;
     if (!fromAddress) 

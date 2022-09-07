@@ -8,7 +8,7 @@ let { sendResponse } = require('../services/commonResponse');
 
 const dotenv = require('dotenv');
 dotenv.config({ path: '../.env' });
-const User = Models.UserCustodialWallet;
+// const User = Models.User_Custodial_Wallet;
 
 const tokenBalanceOf = async (req, res) => {
     if (!req.params || !req.params.address)

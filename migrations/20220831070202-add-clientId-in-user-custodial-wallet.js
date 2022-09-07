@@ -3,11 +3,11 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     return Promise.all([
-      queryInterface.addColumn('UserCustodialWallets', 'clientId',
+      queryInterface.addColumn('User_Custodial_Wallet', 'clientId',
         {
           type: Sequelize.INTEGER,
           references: {
-            model: 'ClientTables',
+            model: 'Client',
             key: 'id',
           },
           onUpdate: 'CASCADE',
@@ -19,7 +19,7 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
     return Promise.all([
-      queryInterface.removeColumn('UserCustodialWallets', 'clientId'),
+      queryInterface.removeColumn('User_Custodial_Wallet', 'clientId'),
     ]);
   }
 };

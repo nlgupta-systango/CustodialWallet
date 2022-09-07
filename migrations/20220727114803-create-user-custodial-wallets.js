@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('UserCustodialWallets', {
+    await queryInterface.createTable('User_Custodial_Wallet', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -29,6 +29,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('UserCustodialWallets');
+    await queryInterface.dropTable('User_Custodial_Wallet');
   }
 };

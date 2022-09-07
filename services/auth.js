@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const Models = require('../models');
 let { sendResponse } = require('../services/commonResponse');
 
-const Client = Models.ClientTable;
+const { Client } = Models;
 
 const verifyToken = async (req, res, next) => {
   if (!(req.body) || !(req.body.email) || (!(req.headers["x-access-token"]) && !(req.headers["authorization"])))
@@ -28,8 +28,6 @@ const verifyToken = async (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, clientData.key);
-    console.log(clientData, clientEmail, decoded.email, token, clientData.key);
-
     req.client = decoded;
     if (clientEmail == decoded.email) {
       return next();

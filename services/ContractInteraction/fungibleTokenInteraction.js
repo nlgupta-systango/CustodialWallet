@@ -1,6 +1,6 @@
 const Web3 = require('web3');
 const Provider = require('@truffle/hdwallet-provider');
-const MyContract = require('../../public/contractABI/erc20Contract.json');
+const MyContract = require('../../constants/contractABIs/erc20Contract.json');
 const { fromWei, toWei } = require("web3-utils");
 const dotenv = require('dotenv');
 dotenv.config({ path: '../../.env' });

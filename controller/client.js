@@ -3,7 +3,7 @@ const { generateApiKey } = require('generate-api-key');
 const jwtToken = require('../services/client_Services/keyGenetator');
 let { sendResponse } = require('../services/commonResponse');
 
-const client = Models.ClientTable;
+const { Client } = Models;
 
 const clientRegister = async (req, res, next) => {
 	if (!(req.body) || !(req.body.name) || !(req.body.email))
@@ -17,7 +17,7 @@ const clientRegister = async (req, res, next) => {
 			key: generateApiKey()
 		};
 
-		let createdClient = await client.create(clientUsr);
+		let createdClient = await Client.create(clientUsr);
 		let newClient =  createdClient.dataValues;
 		delete newClient.key;
 		let clientToken = await jwtToken(clientEmail);

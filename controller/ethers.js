@@ -6,7 +6,8 @@ const { custodialDecryption, getMnemonicFromDB } = require('../services/encryptD
 const { nativeBalance } = require('../services/ContractInteraction/fungibleTokenInteraction');
 let { sendResponse } = require('../services/commonResponse');
 
-const User = Models.UserCustodialWallet;
+const User = Models.User_Custodial_Wallet;
+
 const sendEth = async (req, res) => {
     if (!(req.body) || !(req.body.email) || !(req.body.fromAddress) || !(req.body.amount) || !(req.body.toAddress))
         return sendResponse(res, 400, null, "Client email, fromAddress, toAddress or amount of ethers missing from request body");
