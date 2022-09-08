@@ -3,7 +3,7 @@ const Models = require('../models');
 const sendEthers = require('../services/etherTransfer');
 const HDWallet = require('../services/hdWallet');
 const { custodialDecryption, getMnemonicFromDB } = require('../services/encryptDecrypt');
-const { nativeBalance } = require('../services/ContractInteraction/fungibleTokenInteraction');
+const { nativeBalance } = require('../services/blockchain/contractInteraction/fungibleTokenInteraction');
 let { sendResponse } = require('../services/commonResponse');
 
 const User = Models.User_Custodial_Wallet;

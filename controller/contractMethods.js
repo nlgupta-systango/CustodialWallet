@@ -2,13 +2,12 @@
 const Models = require('./../models');
 const HDWallet = require('../services/hdWallet');
 const { custodialDecryption, getMnemonicFromDB } = require('../services/encryptDecrypt');
-const SC_function = require('../services/ContractInteraction/fungibleTokenInteraction');
+const SC_function = require('../services/blockchain/contractInteraction/fungibleTokenInteraction');
 const sendEthers = require('../services/etherTransfer');
 let { sendResponse } = require('../services/commonResponse');
 
 const dotenv = require('dotenv');
 dotenv.config({ path: '../.env' });
-// const User = Models.User_Custodial_Wallet;
 
 const tokenBalanceOf = async (req, res) => {
     if (!req.params || !req.params.address)
