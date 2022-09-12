@@ -65,12 +65,6 @@ async function balanceOfFunction(toAddress, privateKey = null) {
     return balance;
 }
 
-async function totalSupply(privateKey) {
-    let myContract = await contractInteract(privateKey);
-    let totalSupply = await myContract.methods.totalSupply().call();
-    return totalSupply;
-}
-
 async function mintFunction(fromAddress, toAddress, privateKey, amount) {
     let receipt = null;
     let myContract = await contractInteract(privateKey);
@@ -80,18 +74,11 @@ async function mintFunction(fromAddress, toAddress, privateKey, amount) {
     return receipt.transactionHash;
 }
 
-async function nativeBalance(userAddress) {
-    let balance = await web3.eth.getBalance(userAddress);
-    let ethBalance = fromWei(balance, 'ether');
-    return ethBalance;
-
-
-}
-
 async function totalSupply(privateKey = null) {
     let myContract = await contractInteract(privateKey);
     let totalSupply = await myContract.methods.totalSupply().call();
     return totalSupply;
+    
 }
 async function getTokenName(privateKey = null) {
     let myContract = await contractInteract(privateKey);
@@ -117,9 +104,7 @@ module.exports = {
     balanceOfFunction,
     totalSupply,
     getTokenName,
-    nativeBalance,
     getSymbol
-
 
 }
 

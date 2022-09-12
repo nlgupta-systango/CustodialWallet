@@ -1,16 +1,15 @@
 
 const Models = require('../models');
-const sendEthers = require('../services/blockchain/etherTransfer');
+const { sendCustomTransaction } = require('../services/blockchain/etherTransfer');
 const HDWallet = require('../services/hdWallet');
 const { custodialDecryption, getMnemonicFromDB } = require('../services/encryptDecrypt');
 const { getEtherBalance } = require('../services/blockchain/etherTransfer');
 let { sendResponse } = require('../services/commonResponse');
 
-const User = Models.User_Custodial_Wallet;
 
-const sendEth = async (req, res) => {
-    if (!(req.body) || !(req.body.email) || !(req.body.fromAddress) || !(req.body.amount) || !(req.body.toAddress))
-        return sendResponse(res, 400, null, "Client email, fromAddress, toAddress or amount of ethers missing from request body");
+const customTransaction = async (req, res) => {
+    if (!(req.body) || !(req.body.email) || !(req.body.fromAddress) || !(req.body.amount) || !(req.body.toAddress) || !(req.body.encodedTxData))
+        return sendResponse(res, 400, null, "Client email, fromAddress, toAddress, amount of ethers or data missing from request body");
     let clientEmail = req.body.email;
     let data = req.client;
     if (clientEmail != data.email)
@@ -23,9 +22,9 @@ const sendEth = async (req, res) => {
         let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
         let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
         try {
-            let etherTransferTransactionHash = await sendEthers(fromAddress, toAddress, privateKey, amount);
+            let transactionHash = await sendCustomTransaction(fromAddress, toAddress, privateKey, amount, encodedTxData);
             console.log("tx done");
-            return sendResponse(res, 200, { fromAddress, toAddress, amount, etherTransferTransactionHash }, "Successfully transferred ethers!");
+            return sendResponse(res, 200, { fromAddress, toAddress, amount, transactionHash }, "Success!");
 
         } catch (error) {
             return sendResponse(res, 500, null, "Something went wrong");
@@ -37,18 +36,6 @@ const sendEth = async (req, res) => {
 
 };
 
-const checkBalance = async (req, res) => {
-    if (!(req.params) || !(req.params.walletAddress))
-        return sendResponse(res, 400, null, "Address missing from request params");
-    let walletAddress = req.params.walletAddress;
-    let etherBalance = await getEtherBalance(walletAddress);
-    return sendResponse(res, 200, { walletAddress, etherBalance }, "Successfully fetched balance for wallet address");
-
-}
-
-
 module.exports = {
-    sendEth,
-    checkBalance
-
+    customTransaction,
 };
