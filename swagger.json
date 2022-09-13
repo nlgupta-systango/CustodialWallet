@@ -31,6 +31,10 @@
     {
       "name": "FungibleToken",
       "description": "APIs for FungibleToken related functionalities"
+    },
+    {
+      "name": "CustomTransaction",
+      "description": "APIs for executing custom transaction"
     }
   ],
   "consumes": ["application/json"],
@@ -572,6 +576,55 @@
                   "type": "object",
                   "schema": {
                     "$ref": "#/definitions/fungibleTokenApproveResponse"
+                  }
+                },
+                "message": "string"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Failed. Bad post data."
+        },
+        "404": {
+          "description": "Something went wrong, might be invalid route"
+        },
+        "500": {
+          "description": "Failed. Something went wrong."
+        }
+      }
+    },
+    "/v1/customTransaction/execute": {
+      "post": {
+        "tags": ["CustomTransaction"],
+        "summary": "Execute custom transaction on blockchain.",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "requestBody": {
+          "description": "This API is to be used to execute custom transaction on blockchain using Custodial wallet application",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/customTransactionRequest"
+              }
+            }
+          }
+        },
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "status": "integer",
+                "data": {
+                  "type": "object",
+                  "schema": {
+                    "$ref": "#/definitions/customTransactionResponse"
                   }
                 },
                 "message": "string"
