@@ -3,7 +3,7 @@ const Models = require('./../models');
 const HDWallet = require('../services/hdWallet');
 const { custodialDecryption, getMnemonicFromDB } = require('../services/encryptDecrypt');
 const SC_function = require('../services/blockchain/contractInteraction/fungibleTokenInteraction');
-const sendEthers = require('../services/blockchain/etherTransfer');
+const {sendEthers, getEtherBalance} = require('../services/blockchain/etherTransfer');
 let { sendResponse } = require('../services/commonResponse');
 
 const dotenv = require('dotenv');
@@ -220,7 +220,7 @@ const userMint = async (req, res) => {
         let requiredEther = tokenPrice * amount;
         let userBal = null;
         try {
-            userBal = await SC_function.getEtherBalance(fromAddress);
+            userBal = await getEtherBalance(fromAddress);
         } catch (error) {
             return sendResponse(res, 500, null, "Something went wrong while fetching ether balance");
 

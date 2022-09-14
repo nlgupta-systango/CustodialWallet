@@ -8,14 +8,14 @@ const web3 = new Web3(process.env.INFURA_URL);
 const sendTransaction = async (fromAddress, toAddress, privateKey, amount = 0, data = null) => {
    let sendWei = await Web3.utils.toWei(amount.toString(), 'ether');
    console.log(`Attempting to make transaction from ${fromAddress} to ${toAddress}`);
+   let currentGasEstimate = await getGasEstimate(fromAddress, toAddress, sendWei, data);
    let rawTx = {
       from: fromAddress,
       to: toAddress,
       value: sendWei,
-      data: data
+      data: data,
+      gas: currentGasEstimate
    };
-   let currentGasEstimate = await web3.eth.estimateGas(rawTx);
-   rawTx.gas = currentGasEstimate;
    const createTransaction = await web3.eth.accounts.signTransaction(
       rawTx,
       privateKey
@@ -39,20 +39,32 @@ const sendEthers = async (fromAddress, toAddress, privateKey, ethers) => {
 
 };
 
-const sendCustomTransaction = async (fromAddress, toAddress, privateKey, ethers) => {
+const sendCustomTransaction = async (fromAddress, toAddress, privateKey, ethers, data) => {
    //Calling transaction
    const transactionHash = await sendTransaction(
       fromAddress, toAddress, privateKey, ethers, data
    );
-   console.log(`Transaction successful with hash: ${transactionHash}`);
    return transactionHash;
 
 };
 
-async function getEtherBalance(userAddress) {
+const getEtherBalance = async (userAddress) => {
    let balance = await web3.eth.getBalance(userAddress);
    let ethBalance = fromWei(balance, 'ether');
    return ethBalance;
+
+}
+
+const getGasEstimate = async (fromAddress, toAddress, amount = 0, data = null) => {
+   let rawTx = {
+      from: fromAddress,
+      to: toAddress,
+      value: amount,
+      data: data
+   };
+   let gasEstimate = await web3.eth.estimateGas(rawTx);
+   // gasEstimate = fromWei(gasEstimate.toString(), 'ether').toString();
+   return gasEstimate;
 
 }
 // const sendEthers = async (fromAddress, toAddress, privateKey, ethers) => {
@@ -80,7 +92,9 @@ async function getEtherBalance(userAddress) {
 // };
 
 
-module.exports = { 
+module.exports = {
    sendEthers,
-   sendCustomTransaction
+   sendCustomTransaction,
+   getEtherBalance,
+   getGasEstimate
 };

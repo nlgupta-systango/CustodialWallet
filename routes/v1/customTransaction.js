@@ -1,5 +1,5 @@
 const express = require('express');
-const { customTransaction } = require("../../controller/customTransaction");
+const { executeCustomTransaction, checkGasEstimate } = require("../../controller/customTransaction");
 const auth = require('../../services/auth');
 const clientUserMatch = require('../../services/transactionAuth');
 let { sendResponse } = require('../../services/commonResponse');
@@ -14,7 +14,8 @@ router.get('/', function (req, res,) {
 
 /* POST listing. */
 
-router.post('/execute', auth, clientUserMatch, customTransaction);
+router.post('/execute', auth, clientUserMatch, executeCustomTransaction);
+router.post('/getGasEstimate', checkGasEstimate);
 
 
 module.exports = router;

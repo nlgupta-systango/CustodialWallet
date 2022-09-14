@@ -3,11 +3,11 @@ const Models = require('../models');
 const { sendCustomTransaction } = require('../services/blockchain/etherTransfer');
 const HDWallet = require('../services/hdWallet');
 const { custodialDecryption, getMnemonicFromDB } = require('../services/encryptDecrypt');
-const { getEtherBalance } = require('../services/blockchain/etherTransfer');
+const { getEtherBalance, getGasEstimate } = require('../services/blockchain/etherTransfer');
 let { sendResponse } = require('../services/commonResponse');
 
 
-const customTransaction = async (req, res) => {
+const executeCustomTransaction = async (req, res) => {
     if (!(req.body) || !(req.body.email) || !(req.body.fromAddress) || !(req.body.amount) || !(req.body.toAddress) || !(req.body.encodedTxData))
         return sendResponse(res, 400, null, "Client email, fromAddress, toAddress, amount of ethers or data missing from request body");
     let clientEmail = req.body.email;
@@ -17,6 +17,7 @@ const customTransaction = async (req, res) => {
     let fromAddress = req.body.fromAddress;
     let amount = req.body.amount;
     let toAddress = req.body.toAddress;
+    let encodedTxData = req.body.encodedTxData;
     let decryptedMnemonic = await getMnemonicFromDB(fromAddress);
     if (decryptedMnemonic) {
         let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
@@ -27,6 +28,7 @@ const customTransaction = async (req, res) => {
             return sendResponse(res, 200, { fromAddress, toAddress, amount, transactionHash }, "Success!");
 
         } catch (error) {
+            console.log(error);
             return sendResponse(res, 500, null, "Something went wrong");
         }
 
@@ -36,6 +38,19 @@ const customTransaction = async (req, res) => {
 
 };
 
+const checkGasEstimate = async (req, res) => {
+    if (!(req.body) || !(req.body.fromAddress) || !(req.body.amount) || !(req.body.toAddress) || !(req.body.encodedTxData))
+        return sendResponse(res, 400, null, "Client email, fromAddress, toAddress, amount of ethers or data missing from request body");
+    let fromAddress = req.body.fromAddress;
+    let amount = req.body.amount;
+    let toAddress = req.body.toAddress;
+    let encodedTxData = req.body.encodedTxData;    
+    let gasEstimate = (await getGasEstimate(fromAddress, toAddress, amount, encodedTxData)).toString();
+    return sendResponse(res, 200, { gasEstimate }, "Successfully fetched balance for wallet address");
+
+}
+
 module.exports = {
-    customTransaction,
+    executeCustomTransaction,
+    checkGasEstimate
 };

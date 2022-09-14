@@ -1,25 +1,25 @@
 const CryptoJS = require('crypto-js');
 const Models = require('./../models');
-const dotenv=require('dotenv');
+const dotenv = require('dotenv');
 dotenv.config();
-const AES_KEY=process.env.AES_KEY;
+const AES_KEY = process.env.AES_KEY;
 const User = Models.User_Custodial_Wallet;
 
-const custodialEncryption=(txt)=>{
-  let encrypted = CryptoJS.AES.encrypt(txt, AES_KEY); 
-  finalCipher=CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encrypted));
+const custodialEncryption = (txt) => {
+  let encrypted = CryptoJS.AES.encrypt(txt, AES_KEY);
+  finalCipher = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encrypted));
   return finalCipher;
 
 }
 
-const custodialDecryption=(cipher)=>{
-  decryptedCipher=CryptoJS.enc.Base64.parse(cipher).toString(CryptoJS.enc.Utf8);
+const custodialDecryption = (cipher) => {
+  decryptedCipher = CryptoJS.enc.Base64.parse(cipher).toString(CryptoJS.enc.Utf8);
   let decryptedTxt = CryptoJS.AES.decrypt(decryptedCipher, AES_KEY);
   return decryptedTxt.toString(CryptoJS.enc.Utf8);
 
 }
 
-const getMnemonicFromDB=async(userAddress)=>{  
+const getMnemonicFromDB = async (userAddress) => {
   let fromAddress = userAddress;
   if (!fromAddress) return res.status(404).json({ error: "fromAddress not found in Body" });
   const user = await User.findOne({ where: { userAddress: fromAddress } });
@@ -30,8 +30,8 @@ const getMnemonicFromDB=async(userAddress)=>{
 
 }
 
-module.exports={
-    custodialEncryption,
-    custodialDecryption,
-    getMnemonicFromDB
+module.exports = {
+  custodialEncryption,
+  custodialDecryption,
+  getMnemonicFromDB
 }

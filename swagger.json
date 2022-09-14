@@ -642,6 +642,57 @@
           "description": "Failed. Something went wrong."
         }
       }
+    },
+    "/v1/customTransaction/getGasEstimate": {
+      "post": {
+        "tags": ["CustomTransaction"],
+        "summary": "Get gas estimate for custom transaction on blockchain.",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "requestBody": {
+          "description": "This API is to be used to get gas estimate for custom transaction on blockchain using Custodial wallet application",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/customTransactionRequest"
+              }
+            }
+          }
+        },
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "status": "integer",
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "getGasEstimate": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "message": "string"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Failed. Bad post data."
+        },
+        "404": {
+          "description": "Something went wrong, might be invalid route"
+        },
+        "500": {
+          "description": "Failed. Something went wrong."
+        }
+      }
     }
   },
   "definitions": {
@@ -761,6 +812,43 @@
       "type": "object",
       "properties": {
         "etherTransferTransactionHash": {
+          "type": "string"
+        },
+        "fromAddress": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "toAddress": {
+          "type": "string"
+        }
+      }
+    },
+    "customTransactionRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "fromAddress": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "toAddress": {
+          "type": "string"
+        },
+        "encodedTxData": {
+          "type": "string"
+        }
+      }
+    },
+    "customTransactionResponse": {
+      "type": "object",
+      "properties": {
+        "transactionHash": {
           "type": "string"
         },
         "fromAddress": {

@@ -18,6 +18,7 @@ const createAccount = async (req, res, next) => {
       email: req.body.email,
       clientId: req.client.id
     };
+    console.log("Private key of ", HDWallet.fetchPublicKey(newMnemonic), " : ", HDWallet.fetchPrivateKey(newMnemonic))
     try {
       let createdUser = await User.create(usr);
       return sendResponse(res, 200, { createdUser }, `Successfully created User!`);
