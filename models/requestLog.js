@@ -2,7 +2,7 @@
 const { Sequelize, DataTypes, Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class UserCustodialWallet extends Model {
+  class RequestLog extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -10,26 +10,43 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Client, {
-        foreignKey: 'clientId'
-      });
+      // this.belongsTo(models.Client, {
+      //   foreignKey: 'clientId'
+      // });
     }
   }
-  UserCustodialWallet.init({
+  RequestLog.init({
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
+    ipAddress: {
+      type: DataTypes.STRING
+    },
     userAddress: {
-      unique:true,
       type: DataTypes.STRING
     },
-    mnemonic: {
+    requestMethod: {
       type: DataTypes.STRING
     },
-    email: {
+    requestUrl: {
+      type: DataTypes.STRING
+    },    
+    requestBody: {
+      type: DataTypes.STRING
+    },    
+    requestParam: {
+      type: DataTypes.STRING
+    },
+    responseStatusCode: {
+      type: DataTypes.STRING
+    },
+    responseStatusMessage: {
+      type: DataTypes.STRING
+    },
+    responseData: {
       type: DataTypes.STRING
     },
     createdAt: {
@@ -42,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'User_Custodial_Wallet',
+    modelName: 'Request_Log',
   });
-  return UserCustodialWallet;
+  return RequestLog;
 };

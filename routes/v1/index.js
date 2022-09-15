@@ -11,7 +11,8 @@ let router = express.Router();
 
 /* GET Application  */
 router.get('/', function (req, res, next) {
-	sendResponse(res, 200, null, "Welcome to Custodial Wallet application");
+	sendResponse(res, 200, "null", "Welcome to Custodial Wallet application");
+	next();
 });
 
 router.use('/custodialWallet', walletRouter);

@@ -16,7 +16,6 @@ const clientRegister = async (req, res, next) => {
 			email: clientEmail,
 			key: generateApiKey()
 		};
-
 		let createdClient = await Client.create(clientUsr);
 		let newClient =  createdClient.dataValues;
 		delete newClient.key;

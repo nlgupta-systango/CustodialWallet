@@ -13,6 +13,7 @@ const app = express();
 PORT = process.env.PORT;
 
 app.use(logger('dev'));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -20,15 +21,33 @@ app.use('/v1/api-docs', swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerDo
 app.use('/v1', indexRouter);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
-});
+// app.use(function (req, res, next) {
+//   next(createError(404));
+// });
 
 // error handler
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   console.log(err);
   sendResponse(res, err.status || 500, null, "Something went wrong, might be invalid route");
+});
+
+app.use(function (req, res, next) {
+  // res.on('finish', () => {
+    console.log(res, "==========", res.text, res.body);
+    let log = {
+      ipAddress: req.ip,
+      requestMethod: req.method,
+      requestUrl: req.originalUrl,
+      requestBody: JSON.stringify(req.body),
+      requestParam: JSON.stringify(req.params),
+      responseStatusCode: res.statusCode,
+      responseStatusMessage: res.statusMessage,
+      responseData: res.data
+    }
+    // createRequestLogInDB(log);
+    console.log(log);
+  // });
 });
 
 app.listen(PORT, () => {
