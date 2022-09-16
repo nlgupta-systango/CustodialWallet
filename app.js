@@ -22,13 +22,12 @@ app.use('/v1/api-docs', swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerDo
 app.use('/v1', indexRouter);
 
 // catch 404 and forward to error handler
-// app.use(function (req, res, next) {
-//   next(createError(404));
-// });
+app.use(function (req, res, next) {
+  next(createError(404));
+});
 
 // error handler
 app.use(function (err, req, res, next) {
-  console.log(err);
   sendResponse(res, err.status || responseStatusCodes.InternalServerError, null, responseStatusMessages.InvalidRoute);
   next();
 });

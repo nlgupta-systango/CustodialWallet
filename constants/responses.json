@@ -16,9 +16,12 @@
         "BadGateway": "Bad Gateway",
         "InvalidRoute": "Please check URL, might be invalid route",
         "ClientRegisterBadRequest": "Name or email missing from request body",
+        "FTUserMintBurnBadRequest": "fromAddress or amount is missing from request body",
+        "FTApproveBadRequest": "fromAddress, spenderAddress or amount is missing from request body",
         "InsufficientEthBalance": "Insufficient ether balance",
         "InsufficientERC20Balance": "Insufficient fungible token balance",
-        "SendTxException": "Could not send transaction"
+        "SendTxException": "Could not send transaction",
+        "GetEthBalanceException": "Could not fetch wallet ether balance"
 
     }
 }

@@ -12,7 +12,7 @@ dotenv.config({ path: '../.env' });
 
 const tokenBalanceOf = async (req, res) => {
     if (!req.params || !req.params.address)
-        return sendResponse(res, 400, null, "Wallet address missing from request params");
+        return sendResponse(res, responseStatusCodes.BadRequest, null, "Wallet address missing from request params");
 
     let walletAddress = req.params.address;
     try {
@@ -69,7 +69,7 @@ const mint = async (req, res) => {
     let toAddress = req.body.toAddress;
     let amount = req.body.amount;
     if (!(req.body) || !(req.body.toAddress) || !(req.body.amount))
-        return sendResponse(res, 400, null, "Wallet address or amount missing from request boody");
+        return sendResponse(res, responseStatusCodes.BadRequest, null, "Wallet address or amount missing from request boody");
     try {
         let mintTransactionHash = await SC_function.mintFunction(fromAddress, toAddress, privateKey, amount);
         console.log("tx done");
@@ -84,7 +84,7 @@ const mint = async (req, res) => {
 const transfer = async (req, res) => {
 
     if (!(req.body) || !(req.body.fromAddress) || !(req.body.toAddress) || !(req.body.amount))
-        return sendResponse(res, 400, null, "fromAddress, toAddress or amount is missing from request body");
+        return sendResponse(res, responseStatusCodes.BadRequest, null, "fromAddress, toAddress or amount is missing from request body");
     let fromAddress = req.body.fromAddress;
     let amount = req.body.amount;
     let toAddress = req.body.toAddress;
@@ -137,7 +137,7 @@ const transfer = async (req, res) => {
 const approve = async (req, res) => {
 
     if (!(req.body) || !(req.body.fromAddress) || !(req.body.spenderAddress) || !(req.body.amount))
-        return sendResponse(res, 400, null, "fromAddress, spenderAddress or amount is missing from request body");
+        return sendResponse(res, responseStatusCodes.BadRequest, null, responseStatusMessages.FTApproveBadRequest);
     let fromAddress = req.body.fromAddress;
     let spenderAddress = req.body.spenderAddress;
     let amount = req.body.amount;
@@ -160,9 +160,8 @@ const approve = async (req, res) => {
 };
 
 const burn = async (req, res) => {
-
     if (!(req.body) || !(req.body.fromAddress) || !(req.body.amount))
-        return sendResponse(res, 400, null, "fromAddress or amount is missing from request body");
+        return sendResponse(res, responseStatusCodes.BadRequest, null, responseStatusMessages.FTUserMintBurnBadRequest);
     let fromAddress = req.body.fromAddress;
     let amount = req.body.amount;
     let decryptedMnemonic = await getMnemonicFromDB(fromAddress);
@@ -203,7 +202,7 @@ const userMint = async (req, res) => {
     let fromAddress = req.body.fromAddress;
     let amount = req.body.amount;
     if (!(req.body) || !(req.body.fromAddress) || !(req.body.amount))
-        return sendResponse(res, 400, null, "fromAddress or amount is missing from request body");
+        return sendResponse(res, responseStatusCodes.BadRequest, null, responseStatusMessages.FTUserMintBurnBadRequest);
     let decryptedMnemonic = null;
     try {
         decryptedMnemonic = await getMnemonicFromDB(fromAddress);
@@ -223,7 +222,7 @@ const userMint = async (req, res) => {
         try {
             userBal = await getEtherBalance(fromAddress);
         } catch (error) {
-            return sendResponse(res, responseStatusCodes.InternalServerError, null, "Something went wrong while fetching ether balance");
+            return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.GetEthBalanceException);
         }
         let etherTransferTransactionHash = null;
         let fungibleTokenMintTransactionHash = null;
