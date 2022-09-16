@@ -5,6 +5,7 @@ const { custodialDecryption, getMnemonicFromDB } = require('../services/encryptD
 const SC_function = require('../services/blockchain/contractInteraction/fungibleTokenInteraction');
 const {sendEthers, getEtherBalance} = require('../services/blockchain/etherTransfer');
 let { sendResponse } = require('../services/commonResponse');
+let { responseStatusCodes, responseStatusMessages } = require('../constants/responses.json');
 
 const dotenv = require('dotenv');
 dotenv.config({ path: '../.env' });
@@ -16,10 +17,10 @@ const tokenBalanceOf = async (req, res) => {
     let walletAddress = req.params.address;
     try {
         let fungibleTokenBalance = await SC_function.balanceOfFunction(walletAddress);
-        return sendResponse(res, 200, { walletAddress, fungibleTokenBalance }, "Successfully fetched balance for wallet address");
+        return sendResponse(res, responseStatusCodes.OK, { walletAddress, fungibleTokenBalance }, responseStatusMessages.OK);
 
     } catch (error) {
-        return sendResponse(res, 500, null, "Something went wrong");
+        return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.InternalServerError);
 
     }
 };
@@ -27,10 +28,10 @@ const tokenBalanceOf = async (req, res) => {
 const tokenName = async (req, res) => {
     try {
         let fungibleTokenName = await SC_function.getTokenName();
-        return sendResponse(res, 200, { fungibleTokenName }, "Successfully fetched name of fungible token");
+        return sendResponse(res, responseStatusCodes.OK, { fungibleTokenName }, responseStatusMessages.OK);
 
     } catch (error) {
-        return sendResponse(res, 500, null, "Something went wrong");
+        return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.InternalServerError);
 
     }
 };
@@ -38,10 +39,10 @@ const tokenName = async (req, res) => {
 const totalSupply = async (req, res) => {
     try {
         let fumgibleTokenTotalSupply = await SC_function.totalSupply();
-        return sendResponse(res, 200, { fumgibleTokenTotalSupply }, "Successfully fetched total supply of fungible token");
+        return sendResponse(res, responseStatusCodes.OK, { fumgibleTokenTotalSupply }, responseStatusMessages.OK);
 
     } catch (error) {
-        return sendResponse(res, 500, null, "Something went wrong");
+        return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.InternalServerError);
 
     }
 };
@@ -49,17 +50,17 @@ const totalSupply = async (req, res) => {
 const tokenSymbol = async (req, res) => {
     try {
         let fungibleTokenSymbol = await SC_function.getSymbol();
-        return sendResponse(res, 200, { fungibleTokenSymbol }, "Successfully fetched symbol of fungible token");
+        return sendResponse(res, responseStatusCodes.OK, { fungibleTokenSymbol }, responseStatusMessages.OK);
 
     } catch (error) {
-        return sendResponse(res, 500, null, "Something went wrong");
+        return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.InternalServerError);
 
     }
 };
 
 const tokenPrice = async (req, res) => {
     let fungibleTokenPrice = process.env.TOKEN_PRICE;
-    return sendResponse(res, 200, { fungibleTokenPrice }, "Successfully fetched price of fungible token");
+    return sendResponse(res, responseStatusCodes.OK, { fungibleTokenPrice }, responseStatusMessages.OK);
 };
 
 const mint = async (req, res) => {
@@ -72,10 +73,10 @@ const mint = async (req, res) => {
     try {
         let mintTransactionHash = await SC_function.mintFunction(fromAddress, toAddress, privateKey, amount);
         console.log("tx done");
-        return sendResponse(res, 200, { fromAddress, toAddress, amount, mintTransactionHash }, "Successfully minted fungible token");
+        return sendResponse(res, responseStatusCodes.OK, { fromAddress, toAddress, amount, mintTransactionHash }, responseStatusMessages.OK);
 
     } catch (error) {
-        return sendResponse(res, 500, null, "Something went wrong");
+        return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.InternalServerError);
 
     }
 };
@@ -93,10 +94,10 @@ const transfer = async (req, res) => {
             let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
             let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
             let fungibleTokenTransferTransactionHash = await SC_function.transferFunction(fromAddress, toAddress, privateKey, amount);
-            return sendResponse(res, 200, { fromAddress, toAddress, amount, fungibleTokenTransferTransactionHash }, "Successfully transferred fungible token");
+            return sendResponse(res, responseStatusCodes.OK, { fromAddress, toAddress, amount, fungibleTokenTransferTransactionHash }, responseStatusMessages.OK);
 
         } catch (error) {
-            return sendResponse(res, 500, null, "Something went wrong");
+            return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.InternalServerError);
 
         }
 
@@ -146,10 +147,10 @@ const approve = async (req, res) => {
             let fromAddress = HDWallet.fetchPublicKey(decryptedMnemonic);
             let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
             let fungibleTokenApproveTransactionHash = await SC_function.approveFunction(fromAddress, spenderAddress, privateKey, amount);
-            return sendResponse(res, 200, { fromAddress, spenderAddress, amount, fungibleTokenApproveTransactionHash }, "Successfully approved fungible token");
+            return sendResponse(res, responseStatusCodes.OK, { fromAddress, spenderAddress, amount, fungibleTokenApproveTransactionHash }, responseStatusMessages.OK);
 
         } catch (error) {
-            return sendResponse(res, 500, null, "Something went wrong");
+            return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.InternalServerError);
 
         }
 
@@ -171,10 +172,10 @@ const burn = async (req, res) => {
             let privateKey = HDWallet.fetchPrivateKey(decryptedMnemonic);
             let fungibleTokenBurnTransactionHash = await SC_function.burnFunction(fromAddress, privateKey, amount);
             console.log("tx done");
-            return sendResponse(res, 200, { fromAddress, amount, fungibleTokenBurnTransactionHash }, "Successfully burned fungible token");
+            return sendResponse(res, responseStatusCodes.OK, { fromAddress, amount, fungibleTokenBurnTransactionHash }, responseStatusMessages.OK);
 
         } catch (error) {
-            return sendResponse(res, 500, null, "Something went wrong");
+            return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.InternalServerError);
 
         }
 
@@ -192,7 +193,7 @@ const mintInternal = async (toAddress, amount) => {
         return txHash;
 
     } catch (error) {
-        return sendResponse(res, 500, null, "Something went wrong");
+        return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.InternalServerError);
 
     }
 
@@ -208,7 +209,7 @@ const userMint = async (req, res) => {
         decryptedMnemonic = await getMnemonicFromDB(fromAddress);
 
     } catch (error) {
-        return sendResponse(res, 500, null, "Something went wrong while decrypting mnemonic");
+        return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.InternalServerError);
 
     }
     if (decryptedMnemonic) {
@@ -222,8 +223,7 @@ const userMint = async (req, res) => {
         try {
             userBal = await getEtherBalance(fromAddress);
         } catch (error) {
-            return sendResponse(res, 500, null, "Something went wrong while fetching ether balance");
-
+            return sendResponse(res, responseStatusCodes.InternalServerError, null, "Something went wrong while fetching ether balance");
         }
         let etherTransferTransactionHash = null;
         let fungibleTokenMintTransactionHash = null;
@@ -232,14 +232,14 @@ const userMint = async (req, res) => {
                 console.log(`user bal=${userBal} and req ether= ${requiredEther}`);
                 etherTransferTransactionHash = await sendEthers(fromAddress, toAddress, privateKey, requiredEther);
                 fungibleTokenMintTransactionHash = await mintInternal(fromAddress, amount);
-                return sendResponse(res, 200, { fromAddress, amount, etherTransferTransactionHash, fungibleTokenMintTransactionHash }, "Successfully minted fungible token");
+                return sendResponse(res, responseStatusCodes.OK, { fromAddress, amount, etherTransferTransactionHash, fungibleTokenMintTransactionHash }, responseStatusMessages.OK);
 
             } catch (error) {
-                return sendResponse(res, 500, null, "Something went wrong during transactions");
+                return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.SendTxException);
             }
 
         } else {
-            return sendResponse(res, 500, null, "Insufficient ether balance");
+            return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.InsufficientEthBalance);
         }
 
     } else {

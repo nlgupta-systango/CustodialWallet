@@ -1,0 +1,24 @@
+{
+    "responseStatusCodes": {
+        "OK": 200,
+        "Created": 201,
+        "BadRequest": 400,
+        "NotFound": 404,
+        "InternalServerError": 500,
+        "BadGateway": 502
+
+    },
+    "responseStatusMessages": {
+        "OK": "Success!",
+        "BadRequest": "Bad Request, please check your parameters.",
+        "NotFound": "URL not found",
+        "InternalServerError": "Something went wrong",
+        "BadGateway": "Bad Gateway",
+        "InvalidRoute": "Please check URL, might be invalid route",
+        "ClientRegisterBadRequest": "Name or email missing from request body",
+        "InsufficientEthBalance": "Insufficient ether balance",
+        "InsufficientERC20Balance": "Insufficient fungible token balance",
+        "SendTxException": "Could not send transaction"
+
+    }
+}

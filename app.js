@@ -7,6 +7,7 @@ const swaggerUiExpress = require('swagger-ui-express');
 const indexRouter = require('./routes/v1/index');
 let { sendResponse } = require('./services/commonResponse');
 let swaggerDocument = require('./swagger.json');
+let {responseStatusCodes, responseStatusMessages} = require('./constants/responses.json');
 
 dotenv.config();
 const app = express();
@@ -27,28 +28,27 @@ app.use('/v1', indexRouter);
 
 // error handler
 app.use(function (err, req, res, next) {
-  res.status(err.status || 500);
   console.log(err);
-  sendResponse(res, err.status || 500, null, "Something went wrong, might be invalid route");
+  sendResponse(res, err.status || responseStatusCodes.InternalServerError, null, responseStatusMessages.InvalidRoute);
+  next();
 });
 
-app.use(function (req, res, next) {
-  // res.on('finish', () => {
-    console.log(res, "==========", res.text, res.body);
-    let log = {
-      ipAddress: req.ip,
-      requestMethod: req.method,
-      requestUrl: req.originalUrl,
-      requestBody: JSON.stringify(req.body),
-      requestParam: JSON.stringify(req.params),
-      responseStatusCode: res.statusCode,
-      responseStatusMessage: res.statusMessage,
-      responseData: res.data
-    }
-    // createRequestLogInDB(log);
-    console.log(log);
-  // });
-});
+// app.use(function (req, res, next) {
+//   // res.on('finish', () => {
+//     console.log(res, "==========", res.text, res.body);
+//     let log = {
+//       ipAddress: req.ip,
+//       requestMethod: req.method,
+//       requestUrl: req.originalUrl,
+//       requestBody: JSON.stringify(req.body),
+//       requestParam: JSON.stringify(req.params),
+//       responseStatusCode: res.statusCode,
+//       responseStatusMessage: res.statusMessage,
+//     }
+//     // createRequestLogInDB(log);
+//     console.log(log);
+//   // });
+// });
 
 app.listen(PORT, () => {
   console.log(`connect at ${PORT}`);
