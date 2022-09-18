@@ -5,15 +5,12 @@ const HDWallet = require('../services/hdWallet');
 const { custodialDecryption, getMnemonicFromDB } = require('../services/encryptDecrypt');
 const { getEtherBalance, getGasEstimate } = require('../services/blockchain/etherTransfer');
 let { sendResponse } = require('../services/commonResponse');
+let { responseStatusCodes, responseStatusMessages } = require('../constants/responses.json');
 
 
 const executeCustomTransaction = async (req, res) => {
     if (!(req.body) || !(req.body.email) || !(req.body.fromAddress) || !(req.body.amount) || !(req.body.toAddress) || !(req.body.encodedTxData))
-        return sendResponse(res, 400, null, "Client email, fromAddress, toAddress, amount of ethers or data missing from request body");
-    let clientEmail = req.body.email;
-    let data = req.client;
-    if (clientEmail != data.email)
-        return sendResponse(res, 400, null, "Wrong client request for user");
+        return sendResponse(res, responseStatusCodes.BadRequest, null, responseStatusMessages.CustomTxBadRequest);
     let fromAddress = req.body.fromAddress;
     let amount = req.body.amount;
     let toAddress = req.body.toAddress;
@@ -25,28 +22,28 @@ const executeCustomTransaction = async (req, res) => {
         try {
             let transactionHash = await sendCustomTransaction(fromAddress, toAddress, privateKey, amount, encodedTxData);
             console.log("tx done");
-            return sendResponse(res, 200, { fromAddress, toAddress, amount, transactionHash }, "Success!");
+            return sendResponse(res, responseStatusCodes.OK, { fromAddress, toAddress, amount, transactionHash },responseStatusMessages.OK);
 
         } catch (error) {
             console.log(error);
-            return sendResponse(res, 500, null, "Something went wrong");
+            return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.InternalServerError);
         }
 
     } else {
-        return sendResponse(res, 404, null, "User not found");
+        return sendResponse(res, responseStatusCodes.NotFound, null, responseStatusMessages.NotFound);
     }
 
 };
 
 const checkGasEstimate = async (req, res) => {
     if (!(req.body) || !(req.body.fromAddress) || !(req.body.amount) || !(req.body.toAddress) || !(req.body.encodedTxData))
-        return sendResponse(res, 400, null, "Client email, fromAddress, toAddress, amount of ethers or data missing from request body");
+        return sendResponse(res, responseStatusCodes.BadRequest, null, responseStatusMessages.CustomTxBadRequest);
     let fromAddress = req.body.fromAddress;
     let amount = req.body.amount;
     let toAddress = req.body.toAddress;
     let encodedTxData = req.body.encodedTxData;    
     let gasEstimate = (await getGasEstimate(fromAddress, toAddress, amount, encodedTxData)).toString();
-    return sendResponse(res, 200, { gasEstimate }, "Successfully fetched balance for wallet address");
+    return sendResponse(res, responseStatusCodes.OK, { gasEstimate }, responseStatusMessages.OK);
 
 }
 

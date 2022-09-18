@@ -12,7 +12,7 @@ dotenv.config({ path: '../.env' });
 
 const tokenBalanceOf = async (req, res) => {
     if (!req.params || !req.params.address)
-        return sendResponse(res, responseStatusCodes.BadRequest, null, "Wallet address missing from request params");
+        return sendResponse(res, responseStatusCodes.BadRequest, null, responseStatusMessages.GetBalanceBadRequest);
 
     let walletAddress = req.params.address;
     try {
@@ -102,7 +102,7 @@ const transfer = async (req, res) => {
         }
 
     } else {
-        res.status(404).json({ error: "User does not exist" });
+        return sendResponse(res, responseStatusCodes.NotFound, null, responseStatusMessages.NotFound);
     }
 };
 
@@ -155,7 +155,7 @@ const approve = async (req, res) => {
         }
 
     } else {
-        res.status(404).json({ error: "User does not exist" });
+        return sendResponse(res, responseStatusCodes.NotFound, null, responseStatusMessages.NotFound);
     }
 };
 
@@ -179,7 +179,7 @@ const burn = async (req, res) => {
         }
 
     } else {
-        return sendResponse(res, 404, null, "User not found");
+        return sendResponse(res, responseStatusCodes.NotFound, null, responseStatusMessages.NotFound);
     }
 };
 
@@ -242,7 +242,7 @@ const userMint = async (req, res) => {
         }
 
     } else {
-        return sendResponse(res, 404, null, "User not found");
+        return sendResponse(res, responseStatusCodes.NotFound, null, responseStatusMessages.NotFound);
     }
 }
 

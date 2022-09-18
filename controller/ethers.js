@@ -5,16 +5,13 @@ const HDWallet = require('../services/hdWallet');
 const { custodialDecryption, getMnemonicFromDB } = require('../services/encryptDecrypt');
 const { getEtherBalance } = require('../services/blockchain/etherTransfer');
 let { sendResponse } = require('../services/commonResponse');
+let { responseStatusCodes, responseStatusMessages } = require('../constants/responses.json');
 
 const User = Models.User_Custodial_Wallet;
 
 const sendEth = async (req, res) => {
     if (!(req.body) || !(req.body.email) || !(req.body.fromAddress) || !(req.body.amount) || !(req.body.toAddress))
-        return sendResponse(res, 400, null, "Client email, fromAddress, toAddress or amount of ethers missing from request body");
-    let clientEmail = req.body.email;
-    let data = req.client;
-    if (clientEmail != data.email)
-        return sendResponse(res, 400, null, "Wrong client request for user");
+        return sendResponse(res, responseStatusCodes.BadRequest, null, responseStatusMessages.EtherTransferBadRequest);
     let fromAddress = req.body.fromAddress;
     let amount = req.body.amount;
     let toAddress = req.body.toAddress;
@@ -25,24 +22,24 @@ const sendEth = async (req, res) => {
         try {
             let etherTransferTransactionHash = await sendEthers(fromAddress, toAddress, privateKey, amount);
             console.log("tx done");
-            return sendResponse(res, 200, { fromAddress, toAddress, amount, etherTransferTransactionHash }, "Successfully transferred ethers!");
+            return sendResponse(res, responseStatusCodes.OK, { fromAddress, toAddress, amount, etherTransferTransactionHash }, responseStatusMessages.OK);
 
         } catch (error) {
-            return sendResponse(res, 500, null, "Something went wrong");
+            return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.InternalServerError);
         }
 
     } else {
-        return sendResponse(res, 404, null, "User not found");
+        return sendResponse(res, responseStatusCodes.NotFound, null, responseStatusMessages.NotFound);
     }
 
 };
 
 const checkBalance = async (req, res) => {
     if (!(req.params) || !(req.params.walletAddress))
-        return sendResponse(res, 400, null, "Address missing from request params");
+        return sendResponse(res, responseStatusCodes.BadRequest, null, responseStatusMessages.GetBalanceBadRequest);
     let walletAddress = req.params.walletAddress;
     let etherBalance = await getEtherBalance(walletAddress);
-    return sendResponse(res, 200, { walletAddress, etherBalance }, "Successfully fetched balance for wallet address");
+    return sendResponse(res, responseStatusCodes.OK, { walletAddress, etherBalance }, responseStatusMessages.OK);
 
 }
 
