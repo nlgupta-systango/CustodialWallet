@@ -21,9 +21,11 @@ const custodialDecryption = (cipher) => {
 
 const getMnemonicFromDB = async (userAddress) => {
   let fromAddress = userAddress;
-  if (!fromAddress) return res.status(404).json({ error: "fromAddress not found in Body" });
+  if (!fromAddress) 
+    return;
   const user = await User.findOne({ where: { userAddress: fromAddress } });
-  if (!user) return res.status(404).json({ error: "user not found in Body" });
+  if (!user) 
+    return;
   let encrpytedMnemonic = user.mnemonic;
   let decryptedMnemonic = custodialDecryption(encrpytedMnemonic);
   return decryptedMnemonic;

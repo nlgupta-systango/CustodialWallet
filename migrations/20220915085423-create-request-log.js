@@ -11,9 +11,6 @@ module.exports = {
       ipAddress: {
         type: Sequelize.STRING
       },
-      userAddress: {
-        type: Sequelize.STRING
-      },
       requestMethod: {
         type: Sequelize.STRING
       },
@@ -24,9 +21,6 @@ module.exports = {
         type: Sequelize.STRING
       },
       requestparam: {
-        type: Sequelize.STRING
-      },
-      responseStatus: {
         type: Sequelize.STRING
       },
       createdAt: {

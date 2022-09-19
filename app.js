@@ -19,6 +19,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/v1/api-docs', swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerDocument));
+
+//logger
+app.use(function (req, res, next) {
+    let log = {
+      ipAddress: req.ip,
+      requestMethod: req.method,
+      requestUrl: req.originalUrl,
+      requestBody: JSON.stringify(req.body),
+      requestParam: JSON.stringify(req.params)
+    }
+    console.log(log);
+    // createRequestLogInDB(log);
+    next()
+});
+
 app.use('/v1', indexRouter);
 
 // catch 404 and forward to error handler
@@ -31,23 +46,6 @@ app.use(function (err, req, res, next) {
   sendResponse(res, err.status || responseStatusCodes.InternalServerError, null, responseStatusMessages.InvalidRoute);
   next();
 });
-
-// app.use(function (req, res, next) {
-//   // res.on('finish', () => {
-//     console.log(res, "==========", res.text, res.body);
-//     let log = {
-//       ipAddress: req.ip,
-//       requestMethod: req.method,
-//       requestUrl: req.originalUrl,
-//       requestBody: JSON.stringify(req.body),
-//       requestParam: JSON.stringify(req.params),
-//       responseStatusCode: res.statusCode,
-//       responseStatusMessage: res.statusMessage,
-//     }
-//     // createRequestLogInDB(log);
-//     console.log(log);
-//   // });
-// });
 
 app.listen(PORT, () => {
   console.log(`connect at ${PORT}`);

@@ -25,9 +25,6 @@ module.exports = (sequelize, DataTypes) => {
     ipAddress: {
       type: DataTypes.STRING
     },
-    userAddress: {
-      type: DataTypes.STRING
-    },
     requestMethod: {
       type: DataTypes.STRING
     },
@@ -38,15 +35,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },    
     requestParam: {
-      type: DataTypes.STRING
-    },
-    responseStatusCode: {
-      type: DataTypes.STRING
-    },
-    responseStatusMessage: {
-      type: DataTypes.STRING
-    },
-    responseData: {
       type: DataTypes.STRING
     },
     createdAt: {
