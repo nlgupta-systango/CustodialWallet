@@ -1,6 +1,6 @@
 
 const Models = require('../models');
-const sendEthers = require('../services/blockchain/etherTransfer');
+const {sendEthers} = require('../services/blockchain/etherTransfer');
 const HDWallet = require('../services/hdWallet');
 const { custodialDecryption, getMnemonicFromDB } = require('../services/encryptDecrypt');
 const { getEtherBalance } = require('../services/blockchain/etherTransfer');
@@ -25,6 +25,7 @@ const sendEth = async (req, res) => {
             return sendResponse(res, responseStatusCodes.OK, { fromAddress, toAddress, amount, etherTransferTransactionHash }, responseStatusMessages.OK);
 
         } catch (error) {
+            console.log(error);
             return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.InternalServerError);
         }
 

@@ -1,27 +1,28 @@
 const express = require('express');
-const contractFunction = require('../../controller/contractMethods')
-const auth = require('../../services/auth');
-const clientUserMatch = require('../../services/transactionAuth');
+const contractFunction = require('../../controllers/contractMethods')
+const auth = require('../../middlewares/auth');
+const clientUserMatch = require('../../middlewares/transactionAuth');
 let { sendResponse } = require('../../services/commonResponse');
+let { logRequest } = require('../../middlewares/requestLogger');
 
 const router = express.Router();
 
 /* GET listing. */
-router.get('/', function (req, res,) {
+router.get('/', logRequest, (req, res) => {
     sendResponse(res, 200, null, "Welcome to Fungible Token Service");
 
 });
-router.get('/balanceOf/:address', contractFunction.tokenBalanceOf);
-router.get('/name', contractFunction.tokenName);
-router.get('/totalSupply', contractFunction.totalSupply);
-router.get('/symbol', contractFunction.tokenSymbol);
-router.get('/price', contractFunction.tokenPrice);
+router.get('/balanceOf/:address', logRequest, contractFunction.tokenBalanceOf);
+router.get('/name', logRequest, contractFunction.tokenName);
+router.get('/totalSupply', logRequest, contractFunction.totalSupply);
+router.get('/symbol', logRequest, contractFunction.tokenSymbol);
+router.get('/price', logRequest, contractFunction.tokenPrice);
 
 /* POST  listing. */
-router.post('/transfer', auth, clientUserMatch, contractFunction.transfer);
-router.post('/mint', auth, clientUserMatch, contractFunction.userMint);
-router.post('/burn', auth, clientUserMatch, contractFunction.burn);
-router.post('/approve', auth, clientUserMatch, contractFunction.approve);
+router.post('/transfer', logRequest, auth, clientUserMatch, contractFunction.transfer);
+router.post('/mint', logRequest, auth, clientUserMatch, contractFunction.userMint);
+router.post('/burn', logRequest, auth, clientUserMatch, contractFunction.burn);
+router.post('/approve', logRequest, auth, clientUserMatch, contractFunction.approve);
 // router.post('/transferFrom',auth,clientUserMatch,contractFunction.transferFrom);
 
 

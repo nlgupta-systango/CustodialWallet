@@ -6,11 +6,12 @@ let fungibleTokenRouter = require('./fungibleToken');
 let clientRouter = require('./client');
 let customTransactionRouter = require('./customTransaction');
 let { sendResponse } = require('../../services/commonResponse');
+let { logRequest } = require('../../middlewares/requestLogger');
 
 let router = express.Router();
 
 /* GET Application  */
-router.get('/', function (req, res, next) {
+router.get('/', logRequest, (req, res) => {
 	sendResponse(res, 200, "null", "Welcome to Custodial Wallet application");
 });
 

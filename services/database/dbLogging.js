@@ -1,15 +1,19 @@
 const Models = require('../../models');
-const User = Models.Request_Log;
+const Request_Log = Models.Request_Log;
 
-const createRequestLog = async () => {
+const createRequestLog = async (log) => {
     try {
-		let createdClient = await Client.create(clientUsr);
-		let newClient =  createdClient.dataValues;
-        next()
+		let createdLog = await Request_Log.create(log);
+		let newLog =  createdLog.dataValues;
+		console.log(newLog);
+		return createdLog;
 	} catch (error) {
 		console.log(error);
-		return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.InternalServerError);
+		return 
 
 	}
 }
 
+module.exports = {
+	createRequestLog
+}

@@ -4,10 +4,10 @@ const path = require('path');
 const logger = require('morgan');
 const dotenv = require('dotenv');
 const swaggerUiExpress = require('swagger-ui-express');
+let swaggerDocument = require('./swagger.json');
 const indexRouter = require('./routes/v1/index');
 let { sendResponse } = require('./services/commonResponse');
-let swaggerDocument = require('./swagger.json');
-let {responseStatusCodes, responseStatusMessages} = require('./constants/responses.json');
+let { responseStatusCodes, responseStatusMessages } = require('./constants/responses.json');
 
 dotenv.config();
 const app = express();
@@ -21,18 +21,23 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/v1/api-docs', swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerDocument));
 
 //logger
-app.use(function (req, res, next) {
-    let log = {
-      ipAddress: req.ip,
-      requestMethod: req.method,
-      requestUrl: req.originalUrl,
-      requestBody: JSON.stringify(req.body),
-      requestParam: JSON.stringify(req.params)
-    }
-    console.log(log);
-    // createRequestLogInDB(log);
-    next()
-});
+// app.use( async (req, res, next) => {
+//   console.log(req.params);
+
+//     let log = {
+//       ipAddress: req.ip,
+//       requestMethod: req.method,
+//       requestUrl: req.originalUrl,
+//       requestBody: JSON.stringify(req.body),
+//       requestParam: JSON.stringify(req.params)
+//     }
+//     const createdLog = await createRequestLog(log);
+//     // console.log(createdLog);
+//     if( createdLog )
+//       next()
+//     else
+// 		  return sendResponse(res, responseStatusCodes.InternalServerError, null, responseStatusMessages.InternalServerError);
+// });
 
 app.use('/v1', indexRouter);
 
@@ -43,8 +48,7 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
-  sendResponse(res, err.status || responseStatusCodes.InternalServerError, null, responseStatusMessages.InvalidRoute);
-  next();
+  return sendResponse(res, err.status || responseStatusCodes.InternalServerError, null, responseStatusMessages.InvalidRoute);
 });
 
 app.listen(PORT, () => {

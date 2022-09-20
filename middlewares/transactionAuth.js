@@ -1,7 +1,7 @@
 const Models = require('../models');
 const User = Models.User_Custodial_Wallet;
 const { Client }= Models;
-let { sendResponse } = require('./commonResponse');
+let { sendResponse } = require('../services/commonResponse');
 let { responseStatusCodes, responseStatusMessages } = require('../constants/responses.json');
 
 
